@@ -15,7 +15,9 @@ console.log(result1)
 const anotherNumberOne = "1.10";
 const anotherNumberTwo = "2.30";
 
-console.log(result1.toFixed(2))
+const result2 = result1.toFixed(2)
+
+console.log(result2)
 
 // --------------------------------------
 // Exercise 5 - Decimals and average
@@ -27,8 +29,9 @@ const three = 98;
 // Show in the console the avg. with 5 decimals
 
 const average = (10 + 45 + 98)/3
+const result3 = result1.toFixed(2)
 
-console.log(average.toFixed(5))
+console.log(result3)
 
 // --------------------------------------
 // Exercise 6 - Get the character by index
@@ -37,7 +40,8 @@ const letters = "abc";
 
 // Get me the character "c"
 
-console.log(letters.charAt(2))
+const result4 = letters.charAt(2)
+console.log(result4)
 
 // --------------------------------------
 // Exercise 7 - Replace
@@ -45,7 +49,7 @@ console.log(letters.charAt(2))
 const fact = "You are learning javascript!";
 
 // capitalize the J in Javascript
-const capitalized = fact.replace("j","J")
+const capitalized = fact.replace("javascript","Javascript")
 
 console.log(capitalized)
 // --------------------------------------
