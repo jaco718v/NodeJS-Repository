@@ -1,9 +1,11 @@
 //Import express
-//const express = require("express");
+const express = require("express");
 //Instatiate express
-//const app = express();
+const app = express();
 
-const app = require("express")();
+app.use(express.json());
+
+//const app = require("express")();
 
 
 
@@ -43,6 +45,17 @@ app.get("/wallet/:amount",(req, res) => {
     } else{
         res.send({message: `Sure pal!, you've withdrawn ${amount} cheetos`})
     }
+})
+    //cat?name=Napster&age=2.5
+app.get("/cat",(req, res) => {
+    console.log(req.query)
+    res.send({data: req.query});
+})
+
+
+app.post("/soda",(req, res) => {
+    console.log(req.body)
+    res.send(req.body)
 })
 
 // 80 http
