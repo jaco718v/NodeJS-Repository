@@ -4,7 +4,7 @@ const app = express();
 
 app.use(express.json());
 
-let idNext = 0;
+let idNext = 1;
 
 const mountains = [
     {id: idNext++, name: "Everest", height: "Tall"},
@@ -22,7 +22,7 @@ app.get(path,(req, res) => {
 
 app.get(path+"/:id",(req, res) => {
     let id = Number(req.params.id)
-    res.send({data: mountains.find((n)=> n.id === id)})
+    res.status(404).send({ error: `Could not find item with id= ${id}`})
 });
 
 app.post(path, (req, res) => {
@@ -30,11 +30,12 @@ app.post(path, (req, res) => {
     res.send(req.body)
 });
 
-app.put(path+"/:id", (req, res) => {
+
+app.patch(path+"/:id", (req, res) => {
     let id = Number(req.params.id)
     const foundMountain = mountains.find((n)=> n.id === id)
     if(!foundMountain){
-        res.send("Id not found")
+        res.status(404).send({ error: `Could not find item with id= ${id}`})
         return
     }
     if(req.body.name!=null){
@@ -43,17 +44,28 @@ app.put(path+"/:id", (req, res) => {
     if(req.body.height!=null){
         foundMountain.height = req.body.height
     }
-    res.send(foundMountain)
+    res.send({data:foundMountain})
+});
+
+app.put(path+"/:id", (req, res) => {
+    let id = Number(req.params.id)
+    const foundIndex = mountains.findIndex((n)=> n.id === id)
+    if(!foundMountain){
+        res.status(404).send({ error: `Could not find item with id= ${id}`})
+        return
+    }
+    mountains[foundIndex] = {...mountains[foundIndex],...req.body, id: Number(req.params.id)}
+    res.send({data: foundMountain})
 });
 
 app.delete(path+"/:id", (req, res) => {
     let id = Number(req.params.id)
     const arrIndex = mountains.findIndex((n)=> n.id === id)
     if(arrIndex === -1){
-        res.send("Id not found")
+        res.status(404).send({ error: `Could not find item with id= ${id}`})
         return
     }
-    mountains.splice(arrIndex,1)
+    mountains.splice(arrIndex, 1)
     res.send("Delete complete")
 });
 

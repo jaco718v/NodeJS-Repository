@@ -6,14 +6,14 @@ function gerRandomInt(min, max){
 }
 
 
+function genericActionPeformer(generic, name){
+    return generic(name)
+}
+
 const jump = (name) => `${name} is jumping`
 
 console.log(genericActionPeformer(jump,"Jacob"))
 
-
-function genericActionPeformer(generic, name){
-    return generic(name)
-}
 
 const run = function(name){
     return `${name} is running`

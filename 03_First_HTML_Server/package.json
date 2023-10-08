@@ -1,5 +1,30 @@
 {
   "dependencies": {
+    "cross-env": "^7.0.3",
     "express": "4.18.2"
-  }
+  },
+  "name": "03_first_html_server",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "test",
+    "start:dev":"cross-env PORT=8080 nodemon app.js",
+    "start:prod": "cross-env PORT=80 node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaco718v/NodeJS-Repository.git#main"
+  },
+  "keywords": [
+    "test",
+    "server"
+  ],
+  "author": "Javo718v",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jaco718v/NodeJS-Repository/issues"
+  },
+  "homepage": "https://github.com/jaco718v/NodeJS-Repository/tree/main#readme"
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>Lesson 6</h1>
+
+        Redirect can be done both client-side and server-side. There are 3 means to do client-side redirects. These are doe though the code: <br>
+
+        <img class="image" src="/assets/images/redirects.png"> <br>
+
+        It can also be done through meta tags. Client side redirects cause the browser itself to do the redirect. <br>
+        Server side redirection is done through a get request. One way to do this is by using the sendfile method. Thai method takes an absolute path that we find using the environment variable dirname followed by file location in our project. <br>
+
+        <img class="image" src="/assets/images/sendFile.png"> <br>
+        
+        When working with ES modules you need to instead use the file system module “fs”, since dirname won’t be available. <br>
+        <br>
+        File structure affects readability and can make refactoring easier. By separating parts of our HTML that is used  multiple times into a single header and footer we can improve this. We use a public folder for all files that should be available to the client-user.<br>
+        <br>
+
+        <h1>Lesson 7</h1>
+
+        It is possible to define a script in your node application by adding a “script” section to your “package.json”. You can then run your script by navigating to the correct directory and typing “npm run “script-name” in the console. <br>
+        To define an environment variable in node you can enter it by writing “Variable = value” followed by the by “node app.js“ to start with the given value as an environment variable. This doesn't work with windows though, and instead you need to write it like: “$env:Variable="value". An alternative to this is to install the package cross-env which allows windows users to define the environment variables the usual way. <br>
+        Rendering can happen both on the client side and server side. It can be preferable to render on the server side since you can’t always rely on the client having the resources available to render quickly, thereby improving customer satisfaction. However with mobile apps it is very common to have client-side rendering since modern phones have a lot of processing power nowadays. It’s also more resource intensive to have SSR as it uses your own resources contrary to client-side rendering. Server side rendering means that the HTML page is rendered on the server before it is sent to the client. SSR can also be important for search engine optimization as the crawlers don’t usually load javascript, so websites with SSR get a higher score. <br>
+        This also implies that depending on where code is it uses resources from either client or server. If a fetch request is located in your backend code like app.js it uses server resources, but if it is in the frontend pages in our public folder it uses the clients resources. <br>
+
+    </div>
+</body>
+</html>

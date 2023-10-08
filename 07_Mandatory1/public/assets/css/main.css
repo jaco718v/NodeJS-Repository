@@ -1,0 +1,29 @@
+body {
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main{
+    flex: 1;
+}
+
+.grid-container {
+    display: grid;
+    column-gap: 30px;
+    grid-template-columns: auto auto auto;
+    padding: 0px;
+  }
+
+.grid-item {   
+    background-color:gray; 
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 24px;
+    text-align: center;
+    width: 200px;
+  }
+
+h1 {
+    font-family: "Garamond", Times, serif;
+}

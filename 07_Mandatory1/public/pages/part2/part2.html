@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>Lesson 3</h1>
+
+        We use the utility Nodemon to help monitor our app. By default it restarts our server whenever we alter the javascript, but by altering our nodemon.json we can make it so that it also restarts when we alter html. This way we won’t have to restart our app to see changes.
+        <br><br>
+        When manipulating our arrays there exists multiple built -in functions to help us loop through them. Some of those functions are: map and filter <br>
+        Filter takes a function that returns a boolean value and returns a new list of all the items that fulfilled the criteria of the function. <br>
+        Map returns a new list of where it calls all a given function on all elements.<br>
+        <br>
+        An URL also known as an address is what is used on the internet when fetching a resource. An url refers to a single page. An URL consist of multiple parts which are:<br>
+        Protocol is usually either HTTP or HTTPS. It is the left-most part of the URL. Subdomain is the part preceding the domain and is commonly called “www”. The domain is what is used to find the server. Other parts of the url could be the port, path to the files requested or the parameters.<br>
+        <br>
+        A post-request is a request that sends data to the server to create a new object. <br>
+        A post request in express is made by specifying that it is a post request. The data given can be retrieved by using the req object in the method. This data can either be retrieved as a parameter from the URL or from a body. This would be retrieved by the code: “req.body” or “req.params”.<br>
+        <br>
+        <h1>Lesson 4</h1>
+
+        Fetch requests are used to fetch data from servers. We use fetch to communicate with foreign apis and as well as our own apis.<br>
+        The date object in Javascript can be used to retrieve the dates. To get different types of date you can enter a date object like this:<br>
+        <img class="image" src="/assets/images/datesTypes.png"> <br>
+        Locale is the current date corresponding to your pc’s locale setting. UTC  the standard that the world uses to regulate time. Unix time is time measured that has elapsed in seconds since January 1st 1970, and is used commonly in computing.<br>
+        To get the current month instead of its corresponding number from the date object we can use the code:<br>
+        <img class="image" src="/assets/images/dateMonth.png"> <br>
+        The same can be with days by changing the variable-name to weekday.<br>
+        <br>
+        To deploy our project to  a server we’ve used Vercel..To use Vercel to deploy our express project we first need to to export our API in our app.js by adding the following lines:<br>
+        <img class="image" src="/assets/images/vercelReq.png"> <br>
+        We also need to create a vercel.json to specify to Vercel how to build and route our project. Then after pushing to our github we can login to the Vercel website and select the repository to deploy. <br>
+
+        <h1>Lesson 5</h1>
+        In HTML we can import our Javascript by specifying src in a "script" tag. <br>
+        <img class="image" src="/assets/images/jsImport.png"> <br>
+
+        In this example we also specify type to module which allows us to use modules like importing and exporting functions between our Javascript files. <br>
+
+        In these examples  a relative path is used, and it might be necessary to use an absolute path instead when using multiple html pages depending on the file structure. <br>
+        <br>
+        To export a function in your javascript you need to label it with the keyword “export”. Then when importing it in another file you type like this:<br>
+        <img class="image" src="/assets/images/importFunction.png"> <br>
+        Cross-site scripting is when you inject html tags through the client side part of the application. Usually through using the script tags. When using the method innerHTML without any kind of security method it might leave you vulnerable to XSS. A way to avoid this is to use a method that checks inputs and renders tags and the like harmless. <br>
+    </div>
+</body>
+</html>

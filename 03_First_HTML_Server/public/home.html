@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--    
+        <style>
+        .test1{
+        color:blueviolet
+        }
+        </style> 
+    -->
+
+
+    <link rel="stylesheet" href="./home.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goddag</title>
 </head>
 <body>
-    <h1>Home</h1>
+    <h1 id="title" class="test1" >Home</h1>
+    <h3 id="welcome" class="test1" ></h3>
+    <h3 id="your" class="test1" ></h3>
+    <a href="/second">Second Page</a>
+
+    <script src="./home.js"></script>
+    <script>
+        // Client side redirects 
+        setTimeout(() => window.location.href = "/secondPage", 3000)
+        setTimeout(() => window.location.replace = "/secondPage", 3000)
+        //Also meta tag
+    </script>
+
 </body>
 </html>

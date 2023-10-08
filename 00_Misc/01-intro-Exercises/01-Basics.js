@@ -26,3 +26,5 @@ const resultYear3 = +year+number
 console.log(resultYear)
 
 // --------------------------------------
+
+console.log(2+"2")

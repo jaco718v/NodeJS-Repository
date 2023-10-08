@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h1>Lesson 1</h1>
+        To run a given js file in node, you first have to navigate to the correct directory with the cd command and then type “node appName.js”
+        <br><br>
+        To upload our written code and files to our repositories we use git commands in our terminal. We first use the git command: “git add”.<br>
+        This can be followed by files or a directory to choose what files to add to the next commit. It can also be followed by a -A to add all files in your project to the next commit.<br>
+        After adding files we can commit our files which saves the code in the local repository. This is done with the git command: git commit:” -m “message””<br>
+        The message included in the commit is to describe and document what changes were made in the commit.<br>
+        Then after saving our changes in our local repository we use the push command to push to our remote repository, which in our case is stored on github. This is done with the git command: “git push”<br>
+        If this is the first commit to the repository and it was not pulled or cloned from the remote repository then it is necessary to use the command:  “git push -u "remote" "branch”" to specify what repository and branch it is sent to. <br>
+            <br><br>
+        In js there are 8 different data types. These are:<br>
+        1. String - Is an object of a sequence of characters<br>
+        2. Number - is a 64 bit value of a number<br>
+        3. Bigint - is used when a number is too big for Number<br>
+        4. Boolean - True or false<br>
+        5. Undefined - If a value has not been assigned a value<br>
+        6. Null - An assigned value that represent no value<br>
+        7. Symbol - We have yet to use<br>
+        8. Object -  A collection of properties<br>
+        <br><br>
+        When using different data types together sometimes they may convert to a different type because of the interaction. This is called type coercion. An example of this could be adding a number and a String together would work like this:<br>
+        2 + “2” = “22”<br>
+        Here 2 is converted to string and gets concatenated to result in the string “22”. It is therefore important to always pay attention to what datatypes are used together. A means to avoid such problems when comparing data would be to use the strict equality operators === instead of == which could result in true when comparing different datatypes due to implicit coercion.
+        <br><br>
+        The two rest conventions we follow are the ordering of our HTTP methods in our CRUD and how we define the endpoints.<br>
+        We order our method in the order:<br>
+        Get<br>
+        Post<br>
+        Put<br>
+        Post<br>
+        Delete<br>
+
+        Endpoint names should all use the same path and when accessing a single resource it should use the same as when accessing multiple but followed by an id.<br>
+
+        <h1>Lesson 2</h1>
+        Scope in coding refers to where data is accessible/visible. Javascript has 3 types of scoping block, function and global.<br>
+        Block scope limits a variable declared with let or const from being called outside of its block/{}. This helps make sure that the value is not accidentally  accessed outside of its intended code. Block scope does not apply to variables declared with var.<br>
+        Function scope limits a variable to the function it's declared in. When a variable is declared in a function it becomes local only to that function. This allows for multiple variables to share the same name if they’re in different functions.<br>
+        Global scope is when a variable is declared outside of a function. This means that it can be accessed from anywhere in the file. It’s usually best to refrain from having many global variables, as it makes it easier to accidentally change it.<br>
+        The keyword const makes it so that the variable cannot be reassigned. That means that if a number is assigned as const it cannot be changed. If an object has const, then the reference can’t be changed, however the object’s attributes can change. The keyword let can be changed.<br><br>
+
+        In javascript it is possible to do what is called a callback. A callback is to be able to pass functions as an argument in another function. Callback can be called with different syntaxes. <br>
+        It is possible to store a function as a variable and use it like one. As illustrated here: <br>
+        <img class="image" src="/assets/images/callback.png"> <br>
+        In the image the saved function is written as an arrow function, but it can also be written as a normal function.<br>
+        It is also possible to directly pass an arrow function as an argument like here:<br>
+        <img class="image" src="/assets/images/arrowFunctionArgument.png"><br>
+        In node package.json is how you keep track of modules and packages in your application. You can set up your initial package.json with the command:” npm init” or “npm init -y” to automatically set it up. From here you can either install modules with terminal commands to install them or you can manually enter them like this:<br>
+        <img class="image" src="/assets/images/dependencies.png"><br>
+        After which you can install them with the command: “npm install” or “npm i”. As seen in the image you can specify what version you desire.<br>
+        <br>
+        To set up our backend we use the express framework. To install it we simply use the command: “npm i express”. Then we create an app.js where we write the following code:<br>
+        <img class="image" src="/assets/images/expressSetup.png"><br>
+        We import express since this example is setup with modules in mind. We initialise express and the two following lines are not necessary depending on the application. Static enables you to serve static files and .json allows parsing with JSON payloads. Finally we use app.listen to to bind to our port.<br>
+        <br>
+        We specify what type of HTTP request by keyword following “app.” . We then use res.send to specify what we want to send.<br>
+        <img class="image" src="/assets/images/resSend.png"><br>
+        Here we send the data object with a String.
+
+        <h1>Lesson 3</h1>
+
+        We use the utility Nodemon to help monitor our app. By default it restarts our server whenever we alter the javascript, but by altering our nodemon.json we can make it so that it also restarts when we alter html. This way we won’t have to restart our app to see changes. <br>
+        <br>
+        When manipulating our arrays there exists multiple built -in functions to help us loop through them. Some of those functions are: map and filter <br>
+        Filter takes a function that returns a boolean value and returns a new list of all the items that fulfilled the criteria of the function. <br>
+        Map returns a new list of where it calls all a given function on all elements.<br>
+        <br>
+        An URL also known as an address is what is used on the internet when fetching a resource. An url refers to a single page. An URL consist of multiple parts which are: <br>
+        Protocol is usually either HTTP or HTTPS. It is the left-most part of the URL. Subdomain is the part preceding the domain and is commonly called “www”. The domain is what is used to find the server. Other parts of the url could be the port, path to the files requested or the parameters. <br>
+        <br>
+        A post-request is a request that sends data to the server to create a new object. <br>
+        A post request in express is made by specifying that it is a post request. The data given can be retrieved by using the req object in the method. This data can either be retrieved as a parameter from the URL or from a body. This would be retrieved by the code: “req.body” or “req.params”.<br>
+
+    </div>
+</body>
+</html>
