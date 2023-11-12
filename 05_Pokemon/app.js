@@ -3,6 +3,7 @@ import express from "express"; //Type module in package.json
 const app = express();
 app.use(express.static("public"));
 app.use(express.json());
+app.use(express.urlencoded({extended: true}))
 
 import path from "path"
 import { getRandomNumber } from "./util/randomUtil.js";
@@ -52,6 +53,12 @@ app.get("/battlepokemon", (req ,res) => {
         res.send({data: currentPokemon})
     }
 })
+
+app.post("/contact",(req, res) => {
+    console.log({data: req.body})
+    res.redirect("/")
+})
+
 
 const PORT = 8080;
 app.listen(PORT, () => {
