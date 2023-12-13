@@ -22,7 +22,7 @@ app.use(cors({
 }))
 
 
-//console.log(process.env.SESSION_SECRET)
+console.log(process.env.SESSION_SECRET)
 
 import session from "express-session"
 

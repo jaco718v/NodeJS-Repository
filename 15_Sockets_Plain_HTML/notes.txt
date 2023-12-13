@@ -1,0 +1,7 @@
+Normal - Req response
+Sockets - emit and listener + callback
+
+//Other
+Multer - fileupload // Multer s3
+Cookiebot
+Loading spinner
