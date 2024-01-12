@@ -6,9 +6,6 @@ import "dotenv/config"
 import  express  from "express"
 const app = express()
 
-import path from "path"
-app.use(express.static(path.resolve('../client/dist')))
-
 app.use(express.json())
 
 import helmet from "helmet"
@@ -42,10 +39,6 @@ app.use(coffeRouter)
 
 import loversRouter from './routers/loversRouter.js'
 app.use(loversRouter)
-
-app.get("*", (req, res) => {
-  res.sendFile(path.resolve('../client/dist/index.html'))
-})
 
 const PORT = process.env.PORT || 8080
 app.listen(PORT, () => console.log("Server is running on " + PORT))
