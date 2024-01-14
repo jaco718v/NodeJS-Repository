@@ -3,10 +3,11 @@
   import { BASE_URL } from "../../store/global"
   export let onButtonPress
   export let onSuggestionClick
+  export let SearchAPI
   let searchTerm = ''
   let searchResults
   async function fetchSuggestions(){
-    const response = await fetch($BASE_URL + "/api/search", {
+    const response = await fetch($BASE_URL + SearchAPI, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

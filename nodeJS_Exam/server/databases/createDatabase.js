@@ -18,6 +18,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS books (
   book_id INTEGER PRIMARY KEY NOT NULL,
   title VARCHAR(100),
   resume TEXT,
+  pages INTEGER,
   author VARCHAR(100),
   available BOOLEAN
 );`);
@@ -39,9 +40,9 @@ db.exec(`CREATE TABLE IF NOT EXISTS ratings (
 
 //SEED
 if(isDeleteMode){
-  await db.run("INSERT INTO books (title, resume, author, available) VALUES ('Potter-man', 'The heroic adventures of the one and only Potter-man.', 'JK. JK ', TRUE);" );
-  await db.run("INSERT INTO books (title, resume, author, available) VALUES ('Ring Lords', 'An elf named Ganondorf must brave the oceans to throw the power ring into the seas deepest abyss.', 'R.J.J Neiklot', TRUE);" );
-  await db.run("INSERT INTO books (title, resume, author, available) VALUES ('Spooder-man', 'A novel about the legendary underdog, spooderman', 'Lee Stan', FALSE);" );
+  await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Potter-man', 'The heroic adventures of the one and only Potter-man.', 'JK. JK ', 321, TRUE);" );
+  await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Ring Lords', 'An elf named Ganondorf must brave the oceans to throw the power ring into the seas deepest abyss.', 'R.J.J Neiklot', 419, TRUE);" );
+  await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Spooder-man', 'A novel about the legendary underdog, spooderman', 'Lee Stan', 68, FALSE);" );
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (1, 'Action');");
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (1, 'Magic');");
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (2, 'Adventure');")

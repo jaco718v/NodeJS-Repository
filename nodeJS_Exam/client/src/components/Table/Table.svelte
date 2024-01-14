@@ -3,7 +3,7 @@
     export let tableContents;
     
     import Book from "../Book/Book.svelte";
-    import Paginator from "../Paginator/Paginator.svelte";
+    //import Paginator from "../Paginator/Paginator.svelte";
     
 
     // function handlePressPaginator(newPage){
