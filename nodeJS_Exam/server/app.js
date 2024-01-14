@@ -5,6 +5,7 @@ import path from "path";
 import helmet from "helmet";
 import session from "express-session";
 import authRouter from "./routers/authRouter.js";
+import bookRouter from "./routers/bookRouter.js"
 
 const app = express();
 
@@ -34,6 +35,8 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(authRouter);
+
+app.use(bookRouter)
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve("../client/dist/index.html"));

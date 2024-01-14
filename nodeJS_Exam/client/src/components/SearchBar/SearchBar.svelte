@@ -1,6 +1,8 @@
 <script>
   //import { enhance } from '$app/forms'
   import { BASE_URL } from "../../store/global"
+  export let onButtonPress
+  export let onSuggestionClick
   let searchTerm = ''
   let searchResults
   async function fetchSuggestions(){
@@ -21,7 +23,9 @@
 
 <input bind:value={searchTerm} placeholder="Search..." on:keyup={fetchSuggestions}>
 {#each searchResults as result}
-  <li>{result}</li>
+  <button on:click={() => onSuggestionClick(result)}><ul >{result}</ul></button>
 {/each}
+
+<button on:click={() => onButtonPress(searchTerm)}>Search</button>
 
 <style></style>

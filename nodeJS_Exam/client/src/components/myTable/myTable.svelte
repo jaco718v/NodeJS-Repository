@@ -1,14 +1,13 @@
 <script>
     export let tableHeaders;
     export let tableContents;
-    export let componentType;
     
     import Book from "../Book/Book.svelte";
     import Paginator from "../Paginator/Paginator.svelte";
     
 
-    // function handlePressPaginator(moveNumber){
-    //     pagInfo.currentPage += moveNumber
+    // function handlePressPaginator(newPage){
+    //     pagInfo.currentPage = newPage
     // }
 
     //<Paginator pagInfo={pagInfo} onPressed={handlePressPaginator}/>
@@ -26,9 +25,7 @@
     </thead>
     <tbody>
         {#each tableContents as contentRow}
-            {#if componentType === 'Book'}
-                <tr><Book data={contentRow}/></tr>
-            {/if}
+            <svelte:component this={contentRow.component} {...contentRow} />
         {/each}
     </tbody>
   </table>

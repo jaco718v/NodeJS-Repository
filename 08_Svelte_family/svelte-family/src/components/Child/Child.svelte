@@ -5,6 +5,7 @@
   export let onShowLove
   export let onStealCookie
 
+
   let customFridgeMessage = ""
 
   function submitFridgeMessage(){

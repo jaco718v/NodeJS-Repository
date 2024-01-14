@@ -7,15 +7,14 @@
   let password;
 
   async function signUp() {
-    if (username.value && password.value) {
       const response = await fetch($BASE_URL + "/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: username.value,
-          password: password.value,
+          username: username,
+          password: password,
         }),
       });
       const result = await response.json();
@@ -23,11 +22,9 @@
         user.set(result.data.username);
         navigate("/");
       } else {
+        toast.error("You are missing either username or password");
         navigate("/signup");
       }
-    } else {
-      toast.error("You are missing either username or password");
-    }
   }
 </script>
 
@@ -35,8 +32,8 @@
 
 <h2>Sign up</h2>
 <label for="username">Username:</label><br />
-<input type="text" id="username" name="username" bind:this={username} /><br />
+<input type="text" id="username" name="username" bind:value={username} /><br />
 <label for="password">Last name:</label><br />
-<input type="password" id="password" name="password" bind:this={password} /><br
+<input type="password" id="password" name="password" bind:value={password} /><br
 /><br />
 <button on:click={signUp}>Sign up</button>

@@ -7,11 +7,11 @@
 
 <div class="body">
   {#if currentPage !== 1}
-    <button class="left-arrow" on:click={() => onPressed(-1)}></button>
+    <button class="left-arrow" on:click={() => onPressed(currentPage - 1)}></button>
   {/if}
 
   {#if (numberOfPages > 2 && currentPage !== 1) || currentPage === 2}
-    <button class={"square"} on:click={() => onPressed(-1)}
+    <button class={"square"} on:click={() => onPressed(currentPage - 1)}
       >{currentPage - 1}</button
     >
   {/if}
@@ -21,12 +21,12 @@
   </button>
 
   {#if numberOfPages > 1 && currentPage !== numberOfPages}
-    <button class={"square"} on:click={() => onPressed(1)}
+    <button class={"square"} on:click={() => onPressed(currentPage + 1)}
       >{currentPage + 1}</button
     >
   {/if}
   {#if currentPage !== numberOfPages}
-    <button class="right-arrow" on:click={() => onPressed(1)}></button>
+    <button class="right-arrow" on:click={() => onPressed(currentPage + 1)}></button>
   {/if}
 </div>
 
