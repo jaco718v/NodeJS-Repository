@@ -1,17 +1,16 @@
 <script>
-  export let pagInfo;
-  export let onPressed;
-  const currentPage = pagInfo.currentPage;
-  const numberOfPages = Math.ceil(pagInfo.totalItems / pagInfo.pageLength);
+  export let currentPage;
+  export let numberOfPages
+  export let onPaginatorPressed;
 </script>
 
 <div class="body">
   {#if currentPage !== 1}
-    <button class="left-arrow" on:click={() => onPressed(currentPage - 1)}></button>
+    <button class="left-arrow" on:click={() => onPaginatorPressed(currentPage - 1)}></button>
   {/if}
 
   {#if (numberOfPages > 2 && currentPage !== 1) || currentPage === 2}
-    <button class={"square"} on:click={() => onPressed(currentPage - 1)}
+    <button class={"square"} on:click={() => onPaginatorPressed(currentPage - 1)}
       >{currentPage - 1}</button
     >
   {/if}
@@ -21,12 +20,12 @@
   </button>
 
   {#if numberOfPages > 1 && currentPage !== numberOfPages}
-    <button class={"square"} on:click={() => onPressed(currentPage + 1)}
+    <button class={"square"} on:click={() => onPaginatorPressed(currentPage + 1)}
       >{currentPage + 1}</button
     >
   {/if}
   {#if currentPage !== numberOfPages}
-    <button class="right-arrow" on:click={() => onPressed(currentPage + 1)}></button>
+    <button class="right-arrow" on:click={() => onPaginatorPressed(currentPage + 1)}></button>
   {/if}
 </div>
 
@@ -48,15 +47,17 @@
   .left-arrow {
     width: 0;
     height: 0;
-    border-top: 25px solid transparent;
+    background-color: transparent;
+    border-top: 15px solid transparent;
     border-right: 50px solid #555;
-    border-bottom: 25px solid transparent;
+    border-bottom: 15px solid transparent;
   }
   .right-arrow {
-    width: 0;
-    height: 0;
-    border-top: 25px solid transparent;
+    width: 10;
+    height: 10;
+    background-color: transparent;
+    border-top: 15px solid transparent;
     border-left: 50px solid #555;
-    border-bottom: 25px solid transparent;
+    border-bottom: 15px solid transparent;
   }
 </style>

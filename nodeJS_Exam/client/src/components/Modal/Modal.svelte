@@ -2,14 +2,16 @@
 
     export let showModal
     let dialog
+    $: if (showModal) dialog.showModal();
+
 
 </script>
 
 
 <dialog
-bind:this={dialog}
-on:close={() => (showModal = false)}
-on:click|self={( ( )=> dialog.close())}
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={()=> dialog.close()}
 >
 
     <slot name=header/>

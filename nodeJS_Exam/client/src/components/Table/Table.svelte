@@ -1,17 +1,8 @@
 <script>
     export let tableHeaders;
     export let tableContents;
-    
-    import Book from "../Book/Book.svelte";
-    //import Paginator from "../Paginator/Paginator.svelte";
-    
-
-    // function handlePressPaginator(newPage){
-    //     pagInfo.currentPage = newPage
-    // }
-
-    //<Paginator pagInfo={pagInfo} onPressed={handlePressPaginator}/>
-
+    export let listComponent;
+    export let onOpenModal;
 </script>
 
 
@@ -24,10 +15,17 @@
       </tr>
     </thead>
     <tbody>
+      {#key tableContents}
+        
         {#each tableContents as contentRow}
-            <svelte:component this={contentRow.component} {...contentRow} />
+          <svelte:component this={listComponent} data={contentRow}/><button on:click={() => onOpenModal(contentRow) }>open</button>
         {/each}
+
+      {/key}
+
     </tbody>
   </table>
+
+
 
   

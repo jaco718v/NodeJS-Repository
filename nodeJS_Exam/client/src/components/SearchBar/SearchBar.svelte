@@ -1,32 +1,32 @@
 <script>
   //import { enhance } from '$app/forms'
-  import { BASE_URL } from "../../store/global"
   export let onButtonPress
   export let onSuggestionClick
-  export let SearchAPI
+  export let searchAPI
   let searchTerm = ''
-  let searchResults
+  let searchResults = []
+  const page_size = 5
   async function fetchSuggestions(){
-    const response = await fetch($BASE_URL + SearchAPI, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          searchKey: searchTerm
-        }),
-      });
-      searchResults = await response.json();
+    const response = await fetch(searchAPI+`?search=${searchTerm}&page_size=${page_size}`)
+      const result = await response.json();
+      searchResults = result.data
+      console.log(searchResults)
   }
-
 </script>
 
+<div>
+  <input bind:value={searchTerm} placeholder="Search..." on:keyup={(fetchSuggestions)}>
+  <button on:click={() => onButtonPress(searchTerm)}>Search</button>
+</div>
+{#key searchResults}
+  <div>
+    {#each searchResults as result}
+      <button on:click={() => onSuggestionClick(result)}><ul >{result.title || result.name}</ul></button>
+    {/each}
+  </div>
+{/key}
 
-<input bind:value={searchTerm} placeholder="Search..." on:keyup={fetchSuggestions}>
-{#each searchResults as result}
-  <button on:click={() => onSuggestionClick(result)}><ul >{result}</ul></button>
-{/each}
 
-<button on:click={() => onButtonPress(searchTerm)}>Search</button>
+
 
 <style></style>

@@ -1,6 +1,6 @@
 <script>
 	import { navigate } from "svelte-navigator";
-	import { user } from "../store/global.js"
+	import { user } from "../../store/global"
 
 	//const navigate = useNavigate();
 	//const location = useLocation();
