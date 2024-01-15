@@ -7,17 +7,19 @@
 
 </script>
 
-
+<!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
     bind:this={dialog}
     on:close={() => (showModal = false)}
     on:click|self={()=> dialog.close()}
 >
-
     <slot name=header/>
     <div>
         <slot name=content/>
-        <button autofocus on:click={() => dialog.close()}>Close</button>
+    </div>
+    <div>
+        <slot name=buttons/>
+        <button on:click={() => dialog.close()}>Close</button>
     </div>
 
 </dialog>

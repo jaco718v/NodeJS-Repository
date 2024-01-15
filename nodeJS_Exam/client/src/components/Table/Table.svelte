@@ -2,7 +2,7 @@
     export let tableHeaders;
     export let tableContents;
     export let listComponent;
-    export let onOpenModal;
+    export let onTableButtonPress;
 </script>
 
 
@@ -15,13 +15,10 @@
       </tr>
     </thead>
     <tbody>
-      {#key tableContents}
         
         {#each tableContents as contentRow}
-          <svelte:component this={listComponent} data={contentRow}/><button on:click={() => onOpenModal(contentRow) }>open</button>
+          <svelte:component this={listComponent} data={contentRow}/><div on:click={(evt) => onTableButtonPress(contentRow, evt)}><slot/></div>
         {/each}
-
-      {/key}
 
     </tbody>
   </table>

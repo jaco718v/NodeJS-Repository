@@ -3,12 +3,17 @@
   import Paginator from '../../components/Paginator/Paginator.svelte'
   import Table from '../../components/Table/Table.svelte';
   import Modal from '../../components/Modal/Modal.svelte';
-  import Book from '../../components/Book/Book.svelte'
+  import Book from '../../components/Book/Book.svelte';
+  import Order from '../../components/Order/Order.svelte';
   import SearchBar from '../../components/SearchBar/SearchBar.svelte';
   import {BASE_URL} from '../../store/global'
   const searchAPI = $BASE_URL + '/api/books'
-  let tableContents = []
-  const tableHeaders = ['Title', 'Author', 'Genres', 'Pages']
+
+  let bookData = []
+  const bookHeaders = ['Title', 'Author', 'Genres', 'Pages', 'Actions']
+
+  let orderData = []
+  const orderHeaders = ['Id','Title', 'Actions']
 
   let showModal = false
   let modalBook = {}
@@ -23,9 +28,50 @@
     fetchBooks()
   })
 
-  function handleModalOpen(modalData){
+  function handleBookTablePress(itemData,evt){
+    const targetId = evt.target.id
+    console.log(targetId)
+    const idSplit = targetId.split("-")
+    if(idSplit[0] === "btn"){
+      const action = idSplit[1]
+      if(action === 'modal'){
+        handleButtonModal(itemData)
+      }else if(action === 'add'){
+        addToOrder(itemData)
+      }
+    }
+  }
+
+  function addToOrder(data){
+    if(!(orderData.find((n) => n.book_id === modalBook.book_id))){
+      showModal = false
+      orderData.push({...data})}
+      else{
+        //Toast - Already added
+      }
+  }
+
+  function handleButtonModal(data){
     showModal = true
-    modalBook = modalData
+    modalBook = {...data}
+  }
+
+  
+
+  function handleOrderTablePress(itemData, evt){
+    const targetId = evt.target.id
+    console.log(targetId)
+    const idSplit = targetId.split("-")
+    if(idSplit[0] === "btn"){
+      const action = idSplit[1]
+      if(action === 'modal'){
+        removeFromOrder(itemData)
+      }
+    }
+  }
+
+  function removeFromOrder(itemData){
+    orderData = orderData.filter((n) => n.order_id !== itemData.book_id)
   }
 
   async function fetchPageTotal(){
@@ -48,23 +94,32 @@
   async function fetchBooks(){
     const response = await fetch(searchAPI + `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}`)
     const result = await response.json();
-    tableContents = result.data 
+    bookData = result.data 
   }
 
   function handleSuggestionClick(item){
-    tableContents = item
+    bookData = item
   }
 
 </script>
 
 <SearchBar onButtonPress={handleSearchButtonPress} onSuggestionClick={handleSuggestionClick} searchAPI={searchAPI}/>
+{#key bookData}
+  <Table tableHeaders={bookHeaders} tableContents={bookData} listComponent={Book} onTableButtonPress={handleBookTablePress}>
+    <button id=btn-add>Add to order</button>
+    <button id=btn-modal>Details</button>
+  </Table>
+{/key}
 
-<Table tableHeaders={tableHeaders} bind:tableContents listComponent={Book} onOpenModal={handleModalOpen}/>
-
-
-  {#key tableContents}
+  {#key bookData}
     <Paginator currentPage={currentPage} numberOfPages={numberOfPages} onPaginatorPressed={onPaginatorPressed}/>
   {/key}
+
+{#key orderData}
+  <Table tableHeaders={orderHeaders} tableContents={orderData} listComponent={Order} onTableButtonPress={handleOrderTablePress}>
+    <button id=btn-remove>Details</button>
+  </Table>
+{/key}
 
   <Modal bind:showModal>
     <div slot='header'>
@@ -74,6 +129,11 @@
     <div slot=content>
       <div>{modalBook.resume}</div>
       <span>{modalBook.pages}</span><span>{modalBook.available}</span>
+    </div>
+    <div slot=buttons>
+      {#if modalBook.available}
+        <button on:click={() => addToOrder}>Add to order</button>  
+      {/if}
     </div>
   </Modal>
 
