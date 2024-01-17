@@ -6,6 +6,7 @@ import helmet from "helmet";
 import session from "express-session";
 import authRouter from "./routers/authRouter.js";
 import bookRouter from "./routers/bookRouter.js"
+import orderRouter from "./routers/orderRouter.js"
 
 const app = express();
 
@@ -37,6 +38,8 @@ app.use(limiter);
 app.use(authRouter);
 
 app.use(bookRouter)
+
+app.use(orderRouter)
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve("../client/dist/index.html"));

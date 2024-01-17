@@ -11,7 +11,8 @@ if (isDeleteMode) {
 
 db.exec(`CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(255) PRIMARY KEY NOT NULL,
-  hashed_password CHAR(60)
+  hashed_password CHAR(60),
+  role VARCHAR(50)
 );`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS books (
@@ -29,17 +30,33 @@ db.exec(`CREATE TABLE IF NOT EXISTS genres (
   FOREIGN KEY(book_id) REFERENCES books(book_id)
 );`);
 
-db.exec(`CREATE TABLE IF NOT EXISTS ratings (
-  book_id INTEGER,
+// db.exec(`CREATE TABLE IF NOT EXISTS ratings (
+//   book_id INTEGER,
+//   username VARCHAR(255),
+//   rating INTEGER CHECK(rating <=  10 AND rating >= 0),
+//   FOREIGN KEY(book_id) REFERENCES books(book_id),
+//   FOREIGN KEY(username) REFERENCES users(username)
+// );`);
+
+db.exec(`CREATE TABLE IF NOT EXISTS orders (
+  order_id INTEGER PRIMARY KEY NOT NULL,
   username VARCHAR(255),
-  rating INTEGER CHECK(rating <=  10 AND rating >= 0),
-  FOREIGN KEY(book_id) REFERENCES books(book_id),
+  created VARCHAR(50),
   FOREIGN KEY(username) REFERENCES users(username)
 );`);
 
+db.exec(`CREATE TABLE IF NOT EXISTS order_books (
+  order_id INTEGER,
+  book_id INTEGER,
+  FOREIGN KEY(order_id) REFERENCES orders(order_id),
+  FOREIGN KEY(book_id) REFERENCES books(book_id)
+) `)
 
-//SEED
+
+//SEED //Nacho123
 if(isDeleteMode){
+  await db.run("INSERT INTO users(username, password, role) VALUES ('test1', '$2b$14$jD0.XDapUZSJmKXF5ANiVuF9bb1MJLTy/MrQaxJqRQQOpYz.npDie', 'admin');")
+  
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Potter-man', 'The heroic adventures of the one and only Potter-man.', 'JK. JK ', 321, TRUE);" );
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Ring Lords', 'An elf named Ganondorf must brave the oceans to throw the power ring into the seas deepest abyss.', 'R.J.J Neiklot', 419, TRUE);" );
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Spooder-man', 'A novel about the legendary underdog, spooderman', 'Lee Stan', 68, FALSE);" );
@@ -49,5 +66,10 @@ if(isDeleteMode){
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (2, 'Pirates');")
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (3, 'Tragedy');")
   await db.run("INSERT INTO genres (book_id, genre) VALUES  (3, 'Mystery');")
+  await db.run("INSERT INTO orders (username, created) VALUES ('test1', '17/01/2024, 15.19.28')")
+  await db.run("INSERT INTO orders (username, created) VALUES ('test1', '12/01/2024, 12.01.00')")
+  await db.run("INSERT INTO order_books (order_id, book_id) VALUES (1, 1)")
+  await db.run("INSERT INTO order_books (order_id, book_id) VALUES (1, 2)")
+  await db.run("INSERT INTO order_books (order_id, book_id) VALUES (2, 3)")
 }
 

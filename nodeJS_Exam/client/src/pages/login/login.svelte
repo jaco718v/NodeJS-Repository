@@ -19,7 +19,7 @@
       });
       const result = await response.json();
       if (result.data) {
-        user.set(result.data.username);
+        user.set(result.data);
         navigate("/");
       } else {
         navigate("/login");

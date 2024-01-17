@@ -28,7 +28,7 @@ async function signup(req, res, next) {
   const foundValue = await db.get(query, [req.body.username]);
   if (!foundValue) {
     const hashed_password = await bcrypt.hash(req.body.password, saltRounds);
-    const query = "INSERT INTO users (username, hashed_password) VALUES( ?,?)";
+    const query = "INSERT INTO users (username, hashed_password, role) VALUES(?, ?, 'user')";
     await db.run(query, [req.body.username, hashed_password]);
     await sendMailTest();
     next();

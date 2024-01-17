@@ -2,9 +2,6 @@
 	import { navigate } from "svelte-navigator";
 	import { user } from "../../store/global"
 
-	//const navigate = useNavigate();
-	//const location = useLocation();
-
 	$: if (!$user) {
 		navigate("/login")
 	}
