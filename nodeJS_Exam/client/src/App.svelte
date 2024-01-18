@@ -1,35 +1,101 @@
 <script>
   import { Router, Link, Route } from "svelte-navigator";
-  import {user} from './store/global'
-  import Home from "./pages/home/home.svelte"
+  import {
+    Collapse,
+    Navbar,
+    NavbarToggler,
+    NavbarBrand,
+    Nav,
+    NavItem,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem
+  } from '@sveltestrap/sveltestrap'
+  import {user, BASE_URL} from './store/global'
+  import Home from "./pages/home/home.svelte";
+  import UserOrders from "./pages/UserOrders/UserOrders.svelte"
   import Login from "./pages/login/login.svelte"
   import Signup from "./pages/signup/signup.svelte"
   import PrivateRoute from "./components/PrivateRoute/PrivateRoute.svelte";
   import BookPage from "./pages/bookPage/bookPage.svelte"
-  import  ManageBooks from "./pages/manageBooks/manageBooks.svelte"
+  import ManageBooks from "./pages/manageBooks/manageBooks.svelte"
+  import { Toaster } from "svelte-french-toast";
   
+  let isOpen = false;
+
+  function handleUpdate(event) {
+    isOpen = event.detail.isOpen;
+  }
+
+  async function signOut() {
+    const response = await fetch($BASE_URL + "/api/signout");
+    if (response.status === 200) {
+      user.set(null);
+    }
+  }
+
+
 </script>
 
+<Toaster/>
+
 <Router>
-  <nav>
-    {#if $user && $user.role === 'user'}
-    <Link to="/">Account</Link>
-    {/if}
-    {#if !$user }
-      <Link to="/login">Login</Link>
-      <Link to="/signup">Signup</Link>
-    {/if}
-    <Link to="/books">Books</Link>
-    {#if $user && $user.role === 'admin'}
-      <Link to="/editBooks">Edit Books</Link>
-    {/if}
-  </nav>
+
+  
+<Navbar color="light" light expand="lg">
+  <NavbarBrand>Mailorder-Library</NavbarBrand>
+  <NavbarToggler on:click={() => (isOpen = !isOpen)} />
+  <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
+    <Nav class="ms-auto" navbar>
+      {#if !$user }
+      <NavItem>
+        <Link class="nav-link" to="/login">Login</Link>
+      </NavItem>
+      <NavItem>
+        <Link class="nav-link" to="/signup">Signup</Link>
+      </NavItem>
+      {/if}
+      {#if $user}
+      <NavItem>
+        <a class="nav-link" on:click={signOut}>Logout</a>
+      </NavItem>
+      {/if}
+      <NavItem>
+        <Link class="nav-link" to="/books">Books</Link>
+      </NavItem>
+      <!-- {#if $user && $user.role === 'user'} -->
+      <Dropdown>
+        <DropdownToggle nav caret>User</DropdownToggle>
+        <DropdownMenu end>
+          <DropdownItem><Link to="/userOrders">History</Link></DropdownItem>
+          <DropdownItem divider />
+          <DropdownItem><Link to="/"></Link>Account</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      <!-- {/if} -->
+      <!-- {#if $user && $user.role === 'admin'} -->
+      <Dropdown>
+        <DropdownToggle nav caret>Admin</DropdownToggle>
+        <DropdownMenu end>
+          <DropdownItem><Link to="/editBooks">Edit Books</Link></DropdownItem>
+          <DropdownItem divider />
+          <DropdownItem>Orders</DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+      <!-- {/if} -->
+    </Nav>
+  </Collapse>
+</Navbar>
 
   <div>
-    <PrivateRoute path="/" let:location><Home/></PrivateRoute>
+    <Route path="/"><Home/></Route>
+    <!-- <PrivateRoute path="/" let:location><Home/></PrivateRoute> -->
     <Route path="/login"><Login/></Route>
     <Route path="/signup"><Signup/></Route>
     <Route path="/books"><BookPage/></Route>
+    <Route path="/editBooks"><ManageBooks/></Route>
+    <PrivateRoute path="/userOrders" let:location><UserOrders/></PrivateRoute>
     <PrivateRoute path="/editBooks" let:location><ManageBooks/></PrivateRoute>
   </div>
 

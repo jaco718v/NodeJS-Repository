@@ -8,11 +8,11 @@
   import OrderBook from '../../components/OrderBook/OrderBook.svelte'
   import SearchBar from '../../components/SearchBar/SearchBar.svelte';
   import {BASE_URL, user} from '../../store/global'
-  import toast, { Toaster } from "svelte-french-toast";
+  import toast from "svelte-french-toast";
   const URL = $BASE_URL + '/api/books'
 
   let bookData = []
-  const bookHeaders = ['Title', 'Author', 'Genres', 'Pages', 'Actions']
+  const bookHeaders = ['Title', 'Author', 'Genres', 'Pages', 'Status', 'Actions']
 
   let orderData = []
   const orderHeaders = ['Id','Title', 'Actions']
@@ -102,7 +102,9 @@
   }
 
   function handleSuggestionClick(item){
-    bookData = item
+    bookData = [item]
+    numberOfPages = 1
+
   }
 
   async function fetchBooks(){
@@ -132,43 +134,71 @@
 
 </script>
 
-<Toaster/>
 
-<SearchBar onButtonPress={handleSearchButtonPress} onSuggestionClick={handleSuggestionClick} searchAPI={URL}/>
-{#key bookData}
+
+<div class=barDiv>
+  <SearchBar onButtonPress={handleSearchButtonPress} onSuggestionClick={handleSuggestionClick} searchAPI={URL}/>
+</div>
+<div class=tableBox>
+  <div class=bookTable>
+  
   <Table tableHeaders={bookHeaders} tableContents={bookData} listComponent={Book} onTableButtonPress={handleBookTablePress}>
     {#if $user && $user.role === 'user'}
       <button id=btn-add>Add to order</button>
     {/if}
-    
     <button id=btn-modal>Details</button>
   </Table>
-{/key}
 
+<div class='pagDiv'>
   {#key bookData}
     <Paginator currentPage={currentPage} numberOfPages={numberOfPages} onPaginatorPressed={onPaginatorPressed}/>
   {/key}
+</div>
 
-{#if $user && $user.role === 'user'} 
+</div>
+
+
+<!--   {#if $user && $user.role === 'user'} -->
+<div class=orderTable>
+  <div>Your Current order:</div>
   {#key orderData}
     <Table tableHeaders={orderHeaders} tableContents={orderData} listComponent={OrderBook} onTableButtonPress={handleOrderTablePress}>
       <button id=btn-remove>Remove</button>
     </Table>
     <button on:click={finishOrder}>Finish Order</button>
   {/key}
-{/if}
-  
+<!--  {/if} -->
+</div>
+</div>
 
   <Modal bind:showModal>
-    <div slot='header'>
-      <h3 >{modalBook.title}</h3>
-      <h2>{modalBook.author}</h2>
-    </div>
-    <div slot=content>
-      <div>{modalBook.resume}</div>
-      <span>{modalBook.pages}</span><span>{modalBook.available}</span>
+    <div slot='content'>
+      <h2 >{modalBook.title}</h2>
+      <h4>{modalBook.author}</h4>
+      <div>Resume: <br>{modalBook.resume}</div>
+      <span>Pages: {modalBook.pages}  &nbsp &nbsp &nbsp &nbsp &nbsp Status: {modalBook.available? "Available": "Rented"}</span>
     </div>
     <div slot=buttons>
     </div>
   </Modal>
 
+<style>
+.tableBox {
+  display: flex;
+  flex-direction: row;
+}
+.bookTable {
+  width:65%
+}
+.orderTable{
+  width: 30%;
+  padding: 20px;
+}
+.barDiv{
+  margin: 10px
+}
+.pagDiv{
+  align-items: center;
+
+}
+</style>

@@ -1,49 +1,53 @@
 <script>
-  import { onMount } from 'svelte';
-  import { user, BASE_URL } from "../../store/global";
-  import Table from '../../components/Table/Table.svelte';
-  import OrderBook from "../../components/OrderBook/OrderBook.svelte";
-  import toast from 'svelte-french-toast';
+    import {user, BASE_URL} from '../../store/global'
+    import toast from 'svelte-french-toast';
 
-  let orderData = []
-  const URL = $BASE_URL + '/api/orders'
-  const orderBookHeaders = ['ID','Id','Title']
-  const page_size = 4
+    import io from "socket.io-client";
+    const socket = io("localhost:8080");
 
+    let inputGenre = '' 
+    let sessionHistory = []
 
-  onMount( async () => {
-    fetchOrders()
-  })
-
-  async function fetchOrders(){
-    try{
-      const response = await fetch(URL + `?page_size=${page_size}`)
-      const result = await response.json();
-      orderData = result.data 
-    }catch(error){
-      toast.error("Error while getting orders")
+    function getRecommendation(){
+        socket.emit("client-request-recommendation", {data:inputGenre});
     }
-  }
 
-  async function signOut() {
-    const response = await fetch($BASE_URL + "/api/signout");
-    if (response.status === 200) {
-      user.set(null);
+    function getHistory(){
+        socket.emit("client-request-history")
     }
-  }
+
+    socket.on("server-sent-recommendation", (data) => {
+        console.log("bub")
+        // toast.success(`You asked for a ${inputGenre}, you shoud read ${data.data.title}`)
+    })
+
+    // socket.on("server-no-recommendation", () => {
+    //     toast.error("We have no idea what's right for you!")
+    // })
+
+    // socket.on("server-sent-history", (data) => {
+    //     sessionHistory = data.data.list
+    // })
+
+    // socket.on("server-no-history", () => {
+    //     toast.error("You have made no searches this session")
+    // })
 
 </script>
 
-<h1>Your Page</h1>
-<p>Welcome {$user.name}</p>
-<button on:click={signOut}>Sign out</button>
+<input placeholder="preferred genre" type="text" bind:value={inputGenre}>
+<button on:click={getRecommendation}>Attempt to get a recommendation</button>
 
-<h1>Your Recent Orders</h1>
 
-{#each orderData as order}
-  <div>
-    <h2>Order number: {order.order_id}</h2>
-    <h3>Created at: {order.created}</h3>
-    <Table tableHeaders={orderBookHeaders} tableContents={order.books} listComponent={OrderBook} onTableButtonPress={{}}></Table>
-  </div>
+<button on:click={getHistory}>Show what i've searched</button>
+
+{#if sessionHistory.length > 0}
+{#key sessionHistory}
+<div>
+{#each sessionHistory as searchTerm}
+    <div>{searchTerm}</div>
 {/each}
+</div>
+{/key}
+{/if}
+

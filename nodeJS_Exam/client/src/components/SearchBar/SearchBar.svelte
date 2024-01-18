@@ -7,26 +7,52 @@
   let searchResults = []
   const page_size = 5
   async function fetchSuggestions(){
-    const response = await fetch(searchAPI+`?search=${searchTerm}&page_size=${page_size}`)
+    if(searchTerm != ""){
+      const response = await fetch(searchAPI+`?search=${searchTerm}&page_size=${page_size}`)
       const result = await response.json();
       searchResults = result.data
-      console.log(searchResults)
+    } else {
+      searchResults = []
+    }
   }
 </script>
 
-<div>
+
+<div class=sbar>
   <input bind:value={searchTerm} placeholder="Search..." on:keyup={(fetchSuggestions)}>
   <button on:click={() => onButtonPress(searchTerm)}>Search</button>
 </div>
+<div class=suggestions>
 {#key searchResults}
-  <div>
     {#each searchResults as result}
-      <button on:click={() => onSuggestionClick(result)}><ul >{result.title || result.name}</ul></button>
+      <button class=btn-sgst on:click={() => onSuggestionClick(result)}><ul >{result.title || result.name}</ul></button>
     {/each}
-  </div>
 {/key}
+</div>
 
 
 
-
-<style></style>
+<style>
+  .suggestions{
+  position: absolute;
+  width: 200px;
+  top:127px;
+  background-color: aliceblue;
+  margin: 0;
+  }
+  .sbar{
+    text-align: left;
+  }
+  .btn-sgst{
+    background-color: aliceblue;
+    border-color: transparent;
+    color: black;
+    width: 200px;
+    text-align: left;
+    left: 20px
+  }
+  .btn-sgst:hover{
+    border-color: transparent;
+    
+  }
+</style>

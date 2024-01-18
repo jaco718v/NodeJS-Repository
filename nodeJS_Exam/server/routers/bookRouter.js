@@ -35,6 +35,9 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
      (SELECT GROUP_CONCAT(g.genre,', ') from genres g WHERE g.book_id = b.book_id) as genre_list
       FROM books b WHERE b.title LIKE ? OR b.author LIKE ? ORDER BY ${verifiedSort} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
     const sqlData = await db.all(query, [search, search]);
+    if(req.query.search){
+        req.session.recOptions = sqlData.map((n) => {return {title: n.title, genres: [...(n.genre_list.split(", "))]}})
+    }
     res.send({data:[...sqlData]})
 })
 

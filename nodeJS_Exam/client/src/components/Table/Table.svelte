@@ -6,9 +6,9 @@
 </script>
 
 
-<table class="table" style="max-width:1000px;">
+<table class="table table-striped table-bordered">
     <thead>
-      <tr class="bg-secondary" id="theader">
+      <tr class="bg-light" id="theader">
         {#each tableHeaders as headerName}
             <th>{headerName}</th>
         {/each}
@@ -17,12 +17,20 @@
     <tbody>
         
         {#each tableContents as contentRow}
-          <svelte:component this={listComponent} data={contentRow}/><div on:click={(evt) => onTableButtonPress(contentRow, evt)}><slot/></div>
+        <tr>
+          <svelte:component this={listComponent} data={contentRow}/><th on:click={(evt) => onTableButtonPress(contentRow, evt)}><slot/></th>
+        </tr>
         {/each}
 
     </tbody>
   </table>
 
+<style>
+  .rowDiv{
+    flex-direction: row;
+  }
+
+</style>
 
 
   

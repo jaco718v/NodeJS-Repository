@@ -33,31 +33,37 @@
   .body {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
   }
   .square {
+    border-radius: 5px;
     height: 50px;
     width: 50px;
     background-color: #555;
   }
   .squareHL {
+    border-radius: 5px;
     height: 50px;
     width: 50px;
     background-color: #353ef5;
   }
   .left-arrow {
+    margin: 5px;
     width: 0;
     height: 0;
     background-color: transparent;
-    border-top: 15px solid transparent;
-    border-right: 50px solid #555;
-    border-bottom: 15px solid transparent;
+    border-top: 20px solid transparent;
+    border-right: 35px solid #555;
+    border-bottom: 20px solid transparent;
   }
   .right-arrow {
-    width: 10;
-    height: 10;
+    margin: 5px;
+    width: 0;
+    height: 0;
     background-color: transparent;
-    border-top: 15px solid transparent;
-    border-left: 50px solid #555;
-    border-bottom: 15px solid transparent;
+    border-top: 20px solid transparent;
+	  border-left: 35px solid #555;
+	  border-bottom: 20px solid transparent;
   }
 </style>

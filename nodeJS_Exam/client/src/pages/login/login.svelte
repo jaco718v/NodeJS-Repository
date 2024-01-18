@@ -1,7 +1,8 @@
 <script>
   import { navigate } from "svelte-navigator";
   import { user, BASE_URL } from "../../store/global";
-  import toast, { Toaster } from "svelte-french-toast";
+  import toast from "svelte-french-toast";
+ 
 
   let username;
   let password;
@@ -34,7 +35,7 @@
   }
 </script>
 
-<Toaster/>
+
 
 <h2>Login</h2>
 <label for="username">Username:</label><br />
