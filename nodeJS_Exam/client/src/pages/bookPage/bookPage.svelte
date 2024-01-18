@@ -137,7 +137,7 @@
 <SearchBar onButtonPress={handleSearchButtonPress} onSuggestionClick={handleSuggestionClick} searchAPI={URL}/>
 {#key bookData}
   <Table tableHeaders={bookHeaders} tableContents={bookData} listComponent={Book} onTableButtonPress={handleBookTablePress}>
-    {#if $user.role === 'user'}
+    {#if $user && $user.role === 'user'}
       <button id=btn-add>Add to order</button>
     {/if}
     
@@ -149,7 +149,7 @@
     <Paginator currentPage={currentPage} numberOfPages={numberOfPages} onPaginatorPressed={onPaginatorPressed}/>
   {/key}
 
-{#if $user.role === 'user'} 
+{#if $user && $user.role === 'user'} 
   {#key orderData}
     <Table tableHeaders={orderHeaders} tableContents={orderData} listComponent={OrderBook} onTableButtonPress={handleOrderTablePress}>
       <button id=btn-remove>Remove</button>

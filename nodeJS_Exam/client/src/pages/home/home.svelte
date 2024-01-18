@@ -17,9 +17,9 @@
 
   async function fetchOrders(){
     try{
-    const response = await fetch(URL + `?page_size=${page_size}`)
-    const result = await response.json();
-    orderData = result.data 
+      const response = await fetch(URL + `?page_size=${page_size}`)
+      const result = await response.json();
+      orderData = result.data 
     }catch(error){
       toast.error("Error while getting orders")
     }
@@ -35,7 +35,7 @@
 </script>
 
 <h1>Your Page</h1>
-<p>Welcome {$user}</p>
+<p>Welcome {$user.name}</p>
 <button on:click={signOut}>Sign out</button>
 
 <h1>Your Recent Orders</h1>

@@ -12,7 +12,7 @@
 
 <Router>
   <nav>
-    {#if $user.role === 'user'}
+    {#if $user && $user.role === 'user'}
     <Link to="/">Account</Link>
     {/if}
     {#if !$user }
@@ -20,7 +20,7 @@
       <Link to="/signup">Signup</Link>
     {/if}
     <Link to="/books">Books</Link>
-    {#if $user.role === 'admin'}
+    {#if $user && $user.role === 'admin'}
       <Link to="/editBooks">Edit Books</Link>
     {/if}
   </nav>

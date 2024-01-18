@@ -4,10 +4,10 @@ import db from "../databases/connection.js";
 const router = Router();
 
 async function authorizeUserSession(req, res, next) {
-    if(req.session.role === 'user'){
+    if(req.session.user.role === 'user'){
         next()
     } else{
-        res.status(404).send("Not a authorized user")
+        res.status(401).send("Not an authorized user")
     }
 }
 

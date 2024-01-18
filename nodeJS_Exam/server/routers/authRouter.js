@@ -8,19 +8,18 @@ const saltRounds = 14;
 const router = Router();
 
 async function authorize(req, res, next) {
-  const query = "SELECT hashed_password FROM users WHERE username = ?;";
+  const query = "SELECT hashed_password, role FROM users WHERE username = ?;";
   const sqlData = await db.get(query, [req.body.username]);
-
-  if (await bcrypt.compare(req.body.password, sqlData.hashed_password)) {
+  if (sqlData && await bcrypt.compare(req.body.password, sqlData.hashed_password || "")) {
+    req.session.user = {name: req.body.username, role:sqlData.role }
     next();
   } else {
-    res.send({ data: null });
+    res.status(401).send("Incorrect email or password")
   }
 }
 
-router.post("/api/login", authorize, (req, res) => {
-  req.session.user = req.body.username;
-  res.send({ data: { username: req.body.username } });
+router.post("/api/login", authorize, (req, res, next) => {
+  res.send({ data: { name: req.session.user.name, role: req.session.user.role } });
 });
 
 async function signup(req, res, next) {
@@ -38,8 +37,8 @@ async function signup(req, res, next) {
 }
 
 router.post("/api/signup", signup, (req, res) => {
-  req.session.user = req.body.username;
-  res.send({ data: { username: req.body.username } });
+  req.session.user = {name: req.body.username, role:'user'}
+  res.send({ data: { user: req.session.user.name, role: req.session.user.role } });
 });
 
 function authenticate(req, res, next) {

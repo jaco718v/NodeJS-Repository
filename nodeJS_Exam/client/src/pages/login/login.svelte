@@ -7,6 +7,7 @@
   let password;
 
   async function login() {
+    try{
       const response = await fetch($BASE_URL + "/api/login", {
         method: "POST",
         headers: {
@@ -20,14 +21,16 @@
       const result = await response.json();
       if (result.data) {
         user.set(result.data);
-        navigate("/");
-      } else {
-        navigate("/login");
-        toast.error("You are missing either username or password")
+        if($user.role === 'user'){
+          navigate("/");
+        } else {
+          navigate("/editBooks");
+        }
       }
-    
-      
-    
+    }catch(error){
+      toast.error("Incorrent username or password")
+      password = ""
+    }   
   }
 </script>
 

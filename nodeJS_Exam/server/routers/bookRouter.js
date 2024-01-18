@@ -7,10 +7,10 @@ const whiteListArray = ['book_id', 'title', 'author', 'available', 'pages']
 
 
 async function authorizeAdminSession(req, res, next) {
-    if(req.session.role === 'admin'){
+    if(req.session.user.role === 'admin'){
         next()
     } else{
-        res.status(404).send("Not a authorized admin")
+        res.status(401).send("Not an authorized admin")
     }
 }
 
