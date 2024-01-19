@@ -22,6 +22,8 @@
   let modalType;
   let showModal = false;
 
+  let orderValue = "asc";
+  let sortValue = "";
   let searchTerm = "";
   let currentPage = 1;
   let numberOfPages;
@@ -49,7 +51,8 @@
 
   async function fetchBooks() {
     const response = await fetch(
-      URL + `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}`
+      URL +
+        `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}&sort=${sortValue}&order=${orderValue}`
     );
     const result = await response.json();
     bookData = result.data;
@@ -63,6 +66,7 @@
     modalBookAuthor = "";
     modalBookResume = "";
     modalBookPages = "";
+    modalBookGenres = [];
   }
 
   function handleBookTablePress(itemData, evt) {
@@ -95,9 +99,7 @@
         method: "DELETE",
       });
       toast.success("Book deleted");
-    } catch (err) {
-      console.log("error in delete");
-    }
+    } catch (err) {}
   }
 
   function onPaginatorPressed(newPage) {
@@ -126,7 +128,6 @@
   async function handleSubmit(event) {
     const form = event.target;
     const data = new FormData(form);
-    console.log(JSON.stringify(Object.fromEntries(data)));
     if (form.method == "post") {
       try {
         const response = await fetch(form.action, {
@@ -155,6 +156,20 @@
       }
     }
   }
+
+  function orderByHeader(header) {
+    if (sortValue == header) {
+      if (orderValue == "asc") {
+        orderValue = "desc";
+      } else {
+        orderValue = "asc";
+      }
+    } else {
+      orderValue = "asc";
+    }
+    sortValue = header;
+    fetchBooks();
+  }
 </script>
 
 <div class="barDiv">
@@ -170,6 +185,7 @@
     tableContents={bookData}
     listComponent={Book}
     onTableButtonPress={handleBookTablePress}
+    onTableHeadPress={orderByHeader}
   >
     <button id="btn-edit">Edit</button>
     <button id="btn-delete">Delete</button>
@@ -289,7 +305,9 @@
     </form>
   </div>
   <div slot="buttons">
-    <button form="submitForm">{modalType ? "Create" : "Finish edit"}</button>
+    <button on:click={() => (showModal = false)} form="submitForm"
+      >{modalType ? "Create" : "Finish edit"}</button
+    >
   </div>
 </Modal>
 

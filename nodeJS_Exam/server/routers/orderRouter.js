@@ -12,9 +12,10 @@ async function authorizeUserSession(req, res, next) {
 }
 
 router.get("/api/orders", authorizeUserSession ,async (req, res, next) => {
-    const user = req.session.user
+    const user = req.session.user.name
     const foundOrders = await db.all(`SELECT order_id, created FROM orders WHERE username = ? LIMIT 4;`,[user])
     const idArray = []
+    console.log(foundOrders)
     for(let i = 0; i < 4 ; i++){
         if(foundOrders[i]){
             idArray.push(foundOrders[i].order_id)
@@ -28,12 +29,13 @@ router.get("/api/orders", authorizeUserSession ,async (req, res, next) => {
     for (let order of foundOrders){
         combinedArray.push({...order, books:foundBooks.filter((n) => n.order_id === order.order_id)})
     }
+    console.log(combinedArray)
     res.send({data: combinedArray})
 })
 
 router.post("/api/orders", authorizeUserSession, async (req,res, next) => {
     const date = new Date().toLocaleString()
-    const orderResponse = await db.all (`INSERT INTO orders (username, created) VALUES (?,?);`,[req.session.name, date])
+    const orderResponse = await db.run (`INSERT INTO orders (username, created) VALUES (?,?);`,[req.session.user.name, date])
     for (let book of req.body.books){
         const updateResponse = await db.run('UPDATE books SET available = false WHERE book_id = ?;',[book.book_id])
         const obResponse = await db.all (`INSERT INTO order_books (order_id, book_id) VALUES (?, ?);`,[orderResponse.lastID, book.book_id] )

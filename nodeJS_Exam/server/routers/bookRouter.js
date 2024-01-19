@@ -19,13 +19,19 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
     let page = Number(req.query.page) || 1
     const Offset = ((pageSize * page) - pageSize) || 0
     
-    let verifiedSort = whiteListArray.filter((n) => n === req.query.sortBy)[0]
+    let verifiedSort = 'book_id'
+    if(req.query.sort){
+        verifiedSort = whiteListArray.filter((n) => n === (req.query.sort).toLowerCase())[0]
+        if((req.query.sort.toLocaleLowerCase()) == 'status'){
+            verifiedSort = 'available'
+        }
+    }
     if(!verifiedSort){
         verifiedSort = 'book_id'
     }
    
     let orderType = 'ASC'
-    if(req.query.order === 'desc'){
+    if(req.query.order == 'desc'){
         orderType = 'DESC'
     }
 
@@ -36,7 +42,18 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
       FROM books b WHERE b.title LIKE ? OR b.author LIKE ? ORDER BY ${verifiedSort} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
     const sqlData = await db.all(query, [search, search]);
     if(req.query.search){
-        req.session.recOptions = sqlData.map((n) => {return {title: n.title, genres: [...(n.genre_list.split(", "))]}})
+        if(!req.session.recOptions){
+            req.session.recOptions = []
+        }
+        const newRecs = sqlData.map((n) => {return {title: n.title, genres: [...(n.genre_list.split(", "))]}})
+        const nonDuplicates = newRecs.filter((n => !((req.session.recOptions).find((p)=> p.title === n.title))))
+        req.session.recOptions = [...req.session.recOptions, ...nonDuplicates]
+    }
+    if(req.query.search && req.query.page_size != 5){
+        if(!req.session.history){
+            req.session.history = []
+        }
+        req.session.history = [...req.session.history, req.query.search]
     }
     res.send({data:[...sqlData]})
 })
@@ -54,7 +71,6 @@ router.post("/api/books", authorizeAdminSession , async (req, res, next) => {
     const concatGenres = (req.body.genres).split('-')
     
     for (let genre of concatGenres){
-        console.log(genre)
         const genreResult = await db.run(`INSERT INTO genres (book_id, genre) VALUES (?, ?);`, 
         [bookResult.lastID , genre]);
     }

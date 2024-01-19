@@ -1,21 +1,16 @@
 import "dotenv/config";
 import express from "express";
 import { rateLimit } from "express-rate-limit";
-import path from "path";
 import helmet from "helmet";
-import session from "express-session";
 import authRouter from "./routers/authRouter.js";
 import bookRouter from "./routers/bookRouter.js"
 import orderRouter from "./routers/orderRouter.js"
-
 const app = express();
 
-app.use(express.static(path.resolve("../client/dist")));
+import path from "path";
+app.use(express.static(path.resolve("../client/dist")));    
 
 app.use(express.json());
-
-import cors from "cors";
-
 
 app.use(helmet());
 
@@ -40,15 +35,13 @@ const authRateLimiter = rateLimit({
 app.use("/auth", authRateLimiter);
 
 
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: false },
-//   })
-// );
+import cors from "cors";
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
 
+import session from "express-session";
 const sessionMiddleware = session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -62,7 +55,6 @@ app.use(authRouter);
 app.use(bookRouter)
 
 app.use(orderRouter)
-
 
 import http from "http";
 const server = http.createServer(app);
@@ -79,29 +71,40 @@ const wrap = middleware => (socket, next) => middleware(socket.request, {}, next
 io.use(wrap(sessionMiddleware));
 
 io.on("connection", (socket) => {
-  console.log("anybody there?")
-    // socket.on("client-request-recommendation", (data) => {
-    //   console.log("test")
-    //     let recOptions = socket.request.session.recOptions
-    //     console.log(recOptions)
-    //     // data.title = 
-    //     io.emit("server-sent-recommendation", data);
-    // });
+  socket.on("client-request-recommendation", (data) => {
+      if(socket.request.session.recOptions){
+        let recOptions = socket.request.session.recOptions
+        let recommendations = recOptions
+        if(data){
+          recommendations = recOptions.filter((n) => n.genres.find((n) => n === data.data))
+        }
+        let randomchoice = Math.floor(Math.random() * recommendations.length)
+        if(recommendations.length > 0){
+          data = {title:recommendations[randomchoice].title}
+          io.emit("server-sent-recommendation", data);
+        }else {
+        io.emit("server-no-recommendation")
+        }
+      }else {
+        io.emit("server-no-recommendation")
+      }
+    });
+  socket.on("client-request-history", () => {
+    if(socket.request.session.history){
+      io.emit("server-sent-history", socket.request.session.history)
+    } else {
+      io.emit("server-no-history")
+    }
+  })
 });
-
-
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve("../client/dist/index.html"));
 });
 
-
-
 app.all("*", (req, res) => {
   res.status(404).send({ data: `Unsupported path ${req.path}`})
 });
 
-
-
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => console.log("Server is running on " + PORT));
+server.listen(PORT, () => console.log("Server is running on port", PORT));

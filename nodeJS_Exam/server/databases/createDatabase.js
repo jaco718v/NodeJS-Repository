@@ -6,7 +6,8 @@ if (isDeleteMode) {
   await db.exec(`DROP TABLE IF EXISTS users;`);
   await db.exec(`DROP TABLE IF EXISTS books;`);
   await db.exec(`DROP TABLE IF EXISTS genres;`);
-  await db.exec(`DROP TABLE IF EXISTS ratings;`);
+  await db.exec(`DROP TABLE IF EXISTS orders;`);
+  await db.exec(`DROP TABLE IF EXISTS order_books;`);
 }
 
 db.exec(`CREATE TABLE IF NOT EXISTS users (
@@ -30,13 +31,6 @@ db.exec(`CREATE TABLE IF NOT EXISTS genres (
   FOREIGN KEY(book_id) REFERENCES books(book_id)
 );`);
 
-// db.exec(`CREATE TABLE IF NOT EXISTS ratings (
-//   book_id INTEGER,
-//   username VARCHAR(255),
-//   rating INTEGER CHECK(rating <=  10 AND rating >= 0),
-//   FOREIGN KEY(book_id) REFERENCES books(book_id),
-//   FOREIGN KEY(username) REFERENCES users(username)
-// );`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS orders (
   order_id INTEGER PRIMARY KEY NOT NULL,

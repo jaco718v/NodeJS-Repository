@@ -7,7 +7,7 @@
   let password;
 
   async function signUp() {
-    try{
+    try {
       const response = await fetch($BASE_URL + "/api/signup", {
         method: "POST",
         headers: {
@@ -23,8 +23,8 @@
         user.set(result.data);
         navigate("/");
       }
-    }catch(error){
-      toast.error("Username already taken")
+    } catch (error) {
+      toast.error("Username already taken");
     }
   }
 </script>
