@@ -54,7 +54,7 @@
         {/if}
         {#if $user}
           <NavItem>
-            <a class="nav-link" on:click={signOut}>Logout</a>
+            <button class="nav-link" on:click={signOut}>Logout</button>
           </NavItem>
         {/if}
         <NavItem>

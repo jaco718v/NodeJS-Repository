@@ -35,7 +35,6 @@
   const page_size = 2;
 
   onMount(async () => {
-    fetchPageTotal();
     fetchBooks();
   });
 
@@ -102,7 +101,6 @@
 
   function handleSearchButtonPress(_searchTerm) {
     searchTerm = _searchTerm;
-    fetchPageTotal();
     fetchBooks();
   }
 
@@ -112,12 +110,17 @@
   }
 
   async function fetchBooks() {
-    const response = await fetch(
-      URL +
-        `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}&sort=${sortValue}&order=${orderValue}`
-    );
-    const result = await response.json();
-    bookData = result.data;
+    fetchPageTotal();
+    try {
+      const response = await fetch(
+        URL +
+          `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}&sort=${sortValue}&order=${orderValue}`
+      );
+      const result = await response.json();
+      bookData = result.data;
+    } catch {
+      toast.error("Error getting books");
+    }
   }
 
   async function finishOrder() {
@@ -139,22 +142,14 @@
     }
   }
 
-  function orderByHeader(header) {
-    if (sortValue == header) {
-      if (orderValue == "asc") {
-        orderValue = "desc";
-      } else {
-        orderValue = "asc";
-      }
-    } else {
-      orderValue = "asc";
-    }
+  function onHeaderPress(header) {
+    orderValue === "asc" && sortValue == header ? "desc" : "asc";
     sortValue = header;
     fetchBooks();
   }
 </script>
 
-<div class="barDiv">
+<div class="searchBar">
   <SearchBar
     onButtonPress={handleSearchButtonPress}
     onSuggestionClick={handleSuggestionClick}
@@ -168,7 +163,7 @@
       tableContents={bookData}
       listComponent={Book}
       onTableButtonPress={handleBookTablePress}
-      onTableHeadPress={orderByHeader}
+      onTableHeadPress={onHeaderPress}
     >
       {#if $user && $user.role === "user"}
         <button id="btn-add">Add to order</button>
@@ -204,16 +199,45 @@
 
 <Modal bind:showModal>
   <div slot="content">
-    <h2>{modalBook.title}</h2>
-    <h4>{modalBook.author}</h4>
-    <div>Resume: <br />{modalBook.resume}</div>
-    <span
-      >Pages: {modalBook.pages} &nbsp &nbsp &nbsp &nbsp &nbsp Status: {modalBook.available
-        ? "Available"
-        : "Rented"}</span
-    >
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-8">
+        <h2>{modalBook.title}</h2>
+      </div>
+      <div>
+        <div class="row">
+          <div class="col-sm-1"></div>
+          <div class="col-sm-8">
+            <h4>{modalBook.author}</h4>
+          </div>
+          <div>
+            <div class="row">
+              <div class="col-sm-1"></div>
+              <div class="col-sm-8">
+                <div>{modalBook.resume}</div>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="col-sm-1">
+                    <span>Pages:</span>
+                  </div>
+                  <div class="col-sm-1">
+                    <span>{modalBook.pages}</span>
+                  </div>
+                  <div class="col-sm-4"></div>
+                  <div class="col-sm-1">Status:</div>
+                  <div class="col-sm-1">
+                    {modalBook.available ? "Available" : "Rented"}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div slot="buttons"></div>
+  <div slot=buttons></div>
 </Modal>
 
 <style>
@@ -228,7 +252,7 @@
     width: 30%;
     padding: 20px;
   }
-  .barDiv {
+  .searchBar {
     margin: 10px;
   }
   .pagDiv {
