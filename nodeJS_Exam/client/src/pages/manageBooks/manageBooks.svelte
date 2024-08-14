@@ -39,26 +39,34 @@
   $: if (modalBookGenres) modalBookGenresConcat = modalBookGenres.join("-");
 
   onMount(async () => {
-    fetchPageTotal();
     fetchBooks();
   });
 
   async function fetchPageTotal() {
-    const response = await fetch(URL + "/total" + `?search=${searchTerm}`);
-    const result = await response.json();
-    numberOfPages = Math.ceil(result.data / page_size);
+    try {
+      const response = await fetch(URL + "/total" + `?search=${searchTerm}`);
+      const result = await response.json();
+      numberOfPages = Math.ceil(result.data / page_size);
+    } catch (error) {
+      toast.error("Error getting list");
+    }
   }
 
   async function fetchBooks() {
-    const response = await fetch(
-      URL +
-        `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}&sort=${sortValue}&order=${orderValue}`
-    );
-    const result = await response.json();
-    bookData = result.data;
+    fetchPageTotal();
+    try {
+      const response = await fetch(
+        URL +
+          `?search=${searchTerm}&page=${currentPage}&page_size=${page_size}&sort=${sortValue}&order=${orderValue}`
+      );
+      const result = await response.json();
+      bookData = result.data;
+    } catch {
+      toast.error("Error getting books");
+    }
   }
 
-  function buttonNewPress() {
+  function openCreateModal() {
     showModal = true;
     modalType = true;
     modalBookId = "";
@@ -95,11 +103,14 @@
 
   async function deleteBook(data) {
     try {
-      const response = await fetch(URL + "/" + data.book_id, {
+      await fetch(URL + "/" + data.book_id, {
         method: "DELETE",
       });
       toast.success("Book deleted");
-    } catch (err) {}
+      fetchBooks()
+    } catch (err) {
+      toast.error("Error while deleting book")
+    }
   }
 
   function onPaginatorPressed(newPage) {
@@ -109,12 +120,12 @@
 
   function handleSearchButtonPress(_searchTerm) {
     searchTerm = _searchTerm;
-    fetchPageTotal();
     fetchBooks();
   }
 
   function handleSuggestionClick(item) {
-    bookData = item;
+    bookData = [item];
+    numberOfPages = 1;
   }
 
   function addGenre() {
@@ -122,7 +133,7 @@
   }
 
   function removeGenre(genre) {
-    modalBookGenres = modalBookGenres.filter((n) => n !== genre);
+    modalBookGenres = modalBookGenres.filter((n) => n !==  genre);
   }
 
   async function handleSubmit(event) {
@@ -160,16 +171,8 @@
     showModal = false
   }
 
-  function orderByHeader(header) {
-    if (sortValue == header) {
-      if (orderValue == "asc") {
-        orderValue = "desc";
-      } else {
-        orderValue = "asc";
-      }
-    } else {
-      orderValue = "asc";
-    }
+  function onHeaderPress(header) {
+    orderValue === "asc" && sortValue == header ? "desc" : "asc";
     sortValue = header;
     fetchBooks();
   }
@@ -180,7 +183,7 @@
     onButtonPress={handleSearchButtonPress}
     onSuggestionClick={handleSuggestionClick}
     searchAPI={URL}
-  /> <button class="create-btn" on:click={buttonNewPress}>New</button>
+  /> <button class="create-btn" on:click={openCreateModal}>New</button>
 </div>
 <div class="bookTable">
   <Table
@@ -188,7 +191,7 @@
     tableContents={bookData}
     listComponent={Book}
     onTableButtonPress={handleBookTablePress}
-    onTableHeadPress={orderByHeader}
+    onTableHeadPress={onHeaderPress}
   >
     <button id="btn-edit">Edit</button>
     <button id="btn-delete">Delete</button>
