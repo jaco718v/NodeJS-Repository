@@ -39,7 +39,7 @@
 <Toaster />
 
 <Router>
-  <Navbar color="light" light expand="lg">
+  <Navbar  color="light" light expand="lg">
     <NavbarBrand>Mailorder-Library</NavbarBrand>
     <NavbarToggler on:click={() => (isOpen = !isOpen)} />
     <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>

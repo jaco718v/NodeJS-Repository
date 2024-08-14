@@ -18,8 +18,11 @@
     <div class="row">
       <div class="col-sm-1"></div>
       <div class="col-sm-8" style="display:flex; flex-direction:row">
-        <slot name="buttons" />
-        <button on:click={() => dialog.close()}>Close</button>
+        
+        <button on:click={() => dialog.close()}>
+          <slot name="buttons" />
+          <button>Close</button>
+        </button>
       </div>
     </div>
   </div>
@@ -27,8 +30,8 @@
 
 <style>
   dialog {
-    min-width: 35%;
-    max-width: 35%;
+    min-width: 52%;
+    max-width: 52%;
     border-radius: 5px;
     padding: 12px;
     text-align: left;

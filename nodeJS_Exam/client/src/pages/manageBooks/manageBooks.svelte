@@ -130,7 +130,7 @@
     const data = new FormData(form);
     if (form.method == "post") {
       try {
-        const response = await fetch(form.action, {
+        const response = await fetch(URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -138,12 +138,13 @@
           body: JSON.stringify(Object.fromEntries(data)),
         });
         toast.success("Book created");
+        fetchBooks()
       } catch (error) {
         toast.error("Error while creating book");
       }
     } else {
       try {
-        const response = await fetch(form.action + "/" + data.get("book_id"), {
+        const response = await fetch(URL + "/" + data.get("book_id"), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -151,10 +152,12 @@
           body: JSON.stringify(Object.fromEntries(data)),
         });
         toast.success("Book updated");
+        fetchBooks()
       } catch (error) {
         toast.error("Error while updating book");
       }
     }
+    showModal = false
   }
 
   function orderByHeader(header) {
@@ -305,7 +308,7 @@
     </form>
   </div>
   <div slot="buttons">
-    <button on:click={() => (showModal = false)} form="submitForm"
+    <button form="submitForm"
       >{modalType ? "Create" : "Finish edit"}</button
     >
   </div>
