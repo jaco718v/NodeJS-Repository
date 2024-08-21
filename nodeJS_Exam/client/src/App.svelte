@@ -44,19 +44,6 @@
     <NavbarToggler on:click={() => (isOpen = !isOpen)} />
     <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
       <Nav class="ms-auto" navbar>
-        {#if !$user}
-          <NavItem>
-            <Link class="nav-link" to="/login">Login</Link>
-          </NavItem>
-          <NavItem>
-            <Link class="nav-link" to="/signup">Signup</Link>
-          </NavItem>
-        {/if}
-        {#if $user}
-          <NavItem>
-            <button class="nav-link" on:click={signOut}>Logout</button>
-          </NavItem>
-        {/if}
         <NavItem>
           <Link class="nav-link" to="/books">Books</Link>
         </NavItem>
@@ -80,6 +67,19 @@
           </DropdownMenu>
         </Dropdown>
         {/if}
+        {#if !$user}
+        <NavItem>
+          <Link class="nav-link" to="/signup">Signup</Link>
+        </NavItem>
+        <NavItem>
+          <Link class="nav-link" to="/login">Login</Link>
+        </NavItem>
+      {/if}
+      {#if $user}
+      <NavItem>
+        <button class="nav-link" on:click={signOut}>Logout</button>
+      </NavItem>
+    {/if}
       </Nav>
     </Collapse>
   </Navbar>

@@ -9,7 +9,7 @@
   async function fetchSuggestions() {
     if (searchTerm != "") {
       const response = await fetch(
-        searchAPI + `?search=${searchTerm}&page_size=${page_size}`
+        searchAPI + `?search=${searchTerm}&page_size=${page_size}&suggestion_search=true`
       );
       const result = await response.json();
       searchResults = result.data;

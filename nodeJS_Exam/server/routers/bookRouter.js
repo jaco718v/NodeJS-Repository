@@ -19,42 +19,26 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
     let page = Number(req.query.page) || 1
     const Offset = ((pageSize * page) - pageSize) || 0
     
-    let verifiedSort = 'book_id'
-    if(req.query.sort){
-        verifiedSort = whiteListArray.filter((n) => n === (req.query.sort).toLowerCase())[0]
-        if((req.query.sort.toLocaleLowerCase()) == 'status'){
-            verifiedSort = 'available'
-        }
-    }
-    if(!verifiedSort){
-        verifiedSort = 'book_id'
-    }
-   
-    let orderType = 'ASC'
-    if(req.query.order == 'desc'){
-        orderType = 'DESC'
-    }
+    let sortValue = req.query.sort ||'book_id'
+    sortValue = whiteListArray.filter((n) => n === (sortValue).toLowerCase())[0] || 'book_id'
 
-    const search = req.query.search? req.query.search+ '%' : '%'
+    let orderType = req.query.order?  'DESC' : 'ASC' 
+
+    const search = req.query.search? req.query.search + '%' : '%'
     
     const query = `SELECT b.*,
      (SELECT GROUP_CONCAT(g.genre,', ') from genres g WHERE g.book_id = b.book_id) as genre_list
       FROM books b WHERE b.title LIKE ? OR b.author LIKE ? ORDER BY ${verifiedSort} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
     const sqlData = await db.all(query, [search, search]);
-    if(req.query.search){
-        if(!req.session.recOptions){
-            req.session.recOptions = []
+    if(req.query.search && !req.query.suggestion_search){
+        req.session.history = req.session.history ? [...req.session.history, req.query.search] : []
+
+        if(sqlData.length != 0){
+            const genreList = [].concat(sqlData.map((n) => {return [...(n.genre_list.split(", "))]}))
+            req.session.sessionGenres = [...req.session.sessionGenres, ...genreList]
         }
-        const newRecs = sqlData.map((n) => {return {title: n.title, genres: [...(n.genre_list.split(", "))]}})
-        const nonDuplicates = newRecs.filter((n => !((req.session.recOptions).find((p)=> p.title === n.title))))
-        req.session.recOptions = [...req.session.recOptions, ...nonDuplicates]
     }
-    if(req.query.search && req.query.page_size != 5){
-        if(!req.session.history){
-            req.session.history = []
-        }
-        req.session.history = [...req.session.history, req.query.search]
-    }
+
     res.send({data:[...sqlData]})
 })
 

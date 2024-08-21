@@ -72,7 +72,7 @@ io.use(wrap(sessionMiddleware));
 
 io.on("connection", (socket) => {
   socket.on("client-request-recommendation", (data) => {
-      if(socket.request.session.recOptions){
+      if(socket.request.session.history){
         let recOptions = socket.request.session.recOptions
         let recommendations = recOptions
         if(data){
