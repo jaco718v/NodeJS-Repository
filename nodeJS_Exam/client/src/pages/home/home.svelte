@@ -14,11 +14,11 @@
 
     socket.emit("client-request-history");
 
-    socket.on("server-sent-recommendation", (data) => {
+    socket.on("server-recommendation-yes", (data) => {
       recommendation = data.title
     });
 
-    socket.on("server-sent-history", (data) => {
+    socket.on("server-history-yes", (data) => {
       sessionHistory = data;
     });
   
@@ -30,8 +30,8 @@
 <br />
 {#if recommendation}
   <div>
-    Based on your history, we recommend reading:
-    {recommendation}
+    Based on your search history, we recommend reading:
+    {recommendation}, since you appear interested in GENRE
   </div>
 {/if}
 

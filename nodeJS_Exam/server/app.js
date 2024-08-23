@@ -72,22 +72,38 @@ io.use(wrap(sessionMiddleware));
 
 io.on("connection", (socket) => {
   socket.on("client-request-recommendation", (data) => {
+    socket.request.session.sessionGenres ?? []
       if(socket.request.session.sessionGenres != []){
         const genreFrequency = socket.request.session.sessionGenres.reduce((genre, fq) => {
             genre[fq] = (genre[fq] ?? 0) + 1;
             return genre;
-        }, {});
+          }, {}
+        );
 
-        io.emit("server-sent-recommendation")
-        
+        let topGenre
+        for (value in genreFrequency){
+          topGenre ?? {genre: value, fq: genreFrequency[value]}
+          if(topGenre.fq < genreFrequency[value])
+            topGenre = {genre: value, fq: genreFrequency[value]}
+        }
+        let books = socket.request.session.recommendedBooks ?? []
+        let booksOfGenre = books.filter((n) => n.genres.includes(topGenre))
+        for (let i = booksOfGenre.length -1; i > 0; i--) {      //Fisher Yates Method
+          let j = Math.floor(Math.random() * (i+1));
+          let k = booksOfGenre[i];
+          booksOfGenre[i] = booksOfGenre[j];
+          booksOfGenre[j] = k;
+        }
+        io.emit("server-recommendation-yes",{data: booksOfGenre[0]})
       }
-      io.emit("server-no-recommendation")
+      io.emit("server-recommendation-no")
     });
+
   socket.on("client-request-history", () => {
     if(socket.request.session.history != []){
-      io.emit("server-sent-history", socket.request.session.history)
+      io.emit("server-history-yes", {data: socket.request.session.history})
     } else {
-      io.emit("server-no-history")
+      io.emit("server-history-no")
     }
   })
 });
