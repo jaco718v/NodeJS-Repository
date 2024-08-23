@@ -72,25 +72,19 @@ io.use(wrap(sessionMiddleware));
 
 io.on("connection", (socket) => {
   socket.on("client-request-recommendation", (data) => {
-      if(socket.request.session.history){
-        let recOptions = socket.request.session.recOptions
-        let recommendations = recOptions
-        if(data){
-          recommendations = recOptions.filter((n) => n.genres.find((n) => n === data.data))
-        }
-        let randomchoice = Math.floor(Math.random() * recommendations.length)
-        if(recommendations.length > 0){
-          data = {title:recommendations[randomchoice].title}
-          io.emit("server-sent-recommendation", data);
-        }else {
-        io.emit("server-no-recommendation")
-        }
-      }else {
-        io.emit("server-no-recommendation")
+      if(socket.request.session.sessionGenres != []){
+        const genreFrequency = socket.request.session.sessionGenres.reduce((genre, fq) => {
+            genre[fq] = (genre[fq] ?? 0) + 1;
+            return genre;
+        }, {});
+
+        io.emit("server-sent-recommendation")
+        
       }
+      io.emit("server-no-recommendation")
     });
   socket.on("client-request-history", () => {
-    if(socket.request.session.history){
+    if(socket.request.session.history != []){
       io.emit("server-sent-history", socket.request.session.history)
     } else {
       io.emit("server-no-history")

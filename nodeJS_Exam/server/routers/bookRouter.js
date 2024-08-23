@@ -35,7 +35,9 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
 
         if(sqlData.length != 0){
             const genreList = [].concat(sqlData.map((n) => {return [...(n.genre_list.split(", "))]}))
+            const bookList = sqlData.map((n) => {return {title: n.title, genres:[...(n.genre_list.split(", "))]}})
             req.session.sessionGenres = [...req.session.sessionGenres, ...genreList]
+            req.session.recommendedBooks = [...req.session.recommendedBooks, ...bookList]
         }
     }
 
