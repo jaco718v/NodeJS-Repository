@@ -34,7 +34,7 @@
 <h2>Sign up</h2>
 <label for="username">Username:</label><br />
 <input type="text" id="username" name="username" bind:value={username} /><br />
-<label for="password">Last name:</label><br />
+<label for="password">Password</label><br />
 <input type="password" id="password" name="password" bind:value={password} /><br
 /><br />
 <button on:click={signUp}>Sign up</button>

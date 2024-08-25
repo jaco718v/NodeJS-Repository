@@ -49,8 +49,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS order_books (
 
 //SEED //Nacho123
 if(isDeleteMode){
-  await db.run("INSERT INTO users(username, hashed_password, role) VALUES ('test1', '$2b$14$jD0.XDapUZSJmKXF5ANiVuF9bb1MJLTy/MrQaxJqRQQOpYz.npDie', 'user');")
-  await db.run("INSERT INTO users(username, hashed_password, role) VALUES ('test2', '$2b$14$jD0.XDapUZSJmKXF5ANiVuF9bb1MJLTy/MrQaxJqRQQOpYz.npDie', 'admin');")
+  await db.run("INSERT INTO users(username, hashed_password, role) VALUES ('test1', '$2b$14$L7pkPTh4cY3C/KNkZTpMd.2e0nJmxuAeiDlu/c.K.BByMrpRQ.sFq', 'user');")
+  await db.run("INSERT INTO users(username, hashed_password, role) VALUES ('test2', '$2b$14$L7pkPTh4cY3C/KNkZTpMd.2e0nJmxuAeiDlu/c.K.BByMrpRQ.sFq', 'admin');")
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Potter-man', 'The heroic adventures of the one and only Potter-man.', 'JK. JK ', 321, TRUE);" );
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Ring Lords', 'An elf named Ganondorf must brave the oceans to throw the power ring into the seas deepest abyss.', 'R.J.J Neiklot', 419, TRUE);" );
   await db.run("INSERT INTO books (title, resume, author, pages, available) VALUES ('Spooder-man', 'A novel about the legendary underdog, spooderman', 'Lee Stan', 68, FALSE);" );

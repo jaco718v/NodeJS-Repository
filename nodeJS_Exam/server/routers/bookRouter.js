@@ -28,16 +28,16 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
     
     const query = `SELECT b.*,
      (SELECT GROUP_CONCAT(g.genre,', ') from genres g WHERE g.book_id = b.book_id) as genre_list
-      FROM books b WHERE b.title LIKE ? OR b.author LIKE ? ORDER BY ${verifiedSort} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
+      FROM books b WHERE b.title LIKE ? OR b.author LIKE ? ORDER BY ${sortValue} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
     const sqlData = await db.all(query, [search, search]);
     if(req.query.search && !req.query.suggestion_search){
-        req.session.history = req.session.history ? [...req.session.history, req.query.search] : []
+        req.session.history = req.session.history ? [...req.session.history, req.query.search] : [req.query.search]
 
         if(sqlData.length != 0){
             const genreList = [].concat(sqlData.map((n) => {return [...(n.genre_list.split(", "))]}))
             const bookList = sqlData.map((n) => {return {title: n.title, genres:[...(n.genre_list.split(", "))]}})
-            req.session.sessionGenres = [...req.session.sessionGenres, ...genreList]
-            req.session.recommendedBooks = [...req.session.recommendedBooks, ...bookList]
+            req.session.sessionGenres = req.session.sessionGenres? [...req.session.sessionGenres, ...genreList] : [...genreList]
+            req.session.recommendedBooks = req.session.recommendedBooks ? [...req.session.recommendedBooks, ...bookList] : [...bookList]
         }
     }
 

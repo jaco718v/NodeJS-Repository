@@ -14,12 +14,12 @@
 
     socket.emit("client-request-history");
 
-    socket.on("server-recommendation-yes", (data) => {
-      recommendation = data.title
+    socket.on("server-recommendation-yes", (serverRec) => {
+      recommendation = serverRec.data
     });
 
-    socket.on("server-history-yes", (data) => {
-      sessionHistory = data;
+    socket.on("server-history-yes", (history) => {
+      sessionHistory = history.data
     });
   
 })
@@ -31,7 +31,7 @@
 {#if recommendation}
   <div>
     Based on your search history, we recommend reading:
-    {recommendation}, since you appear interested in GENRE
+    {recommendation.title}, since you appear interested in {recommendation.topGenre}
   </div>
 {/if}
 
@@ -43,7 +43,7 @@
   <div>
     Your session search history:
   </div>
-  {#if sessionHistory.length > 0}
+  {#if sessionHistory}
     {#key sessionHistory}
       <div class="listBox">
         {#each sessionHistory as searchTerm}

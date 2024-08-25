@@ -71,36 +71,35 @@ const wrap = middleware => (socket, next) => middleware(socket.request, {}, next
 io.use(wrap(sessionMiddleware));
 
 io.on("connection", (socket) => {
-  socket.on("client-request-recommendation", (data) => {
-    socket.request.session.sessionGenres ?? []
-      if(socket.request.session.sessionGenres != []){
+  socket.on("client-request-recommendation", () => {
+      if(socket.request.session.sessionGenres){
         const genreFrequency = socket.request.session.sessionGenres.reduce((genre, fq) => {
             genre[fq] = (genre[fq] ?? 0) + 1;
             return genre;
           }, {}
         );
 
-        let topGenre
-        for (value in genreFrequency){
-          topGenre ?? {genre: value, fq: genreFrequency[value]}
-          if(topGenre.fq < genreFrequency[value])
-            topGenre = {genre: value, fq: genreFrequency[value]}
+        let topGenreData
+        for (let value in genreFrequency){
+          topGenreData = topGenreData ?? {genre: value, fq: genreFrequency[value]}
+          if(topGenreData.fq < genreFrequency[value])
+            topGenreData = {genre: value, fq: genreFrequency[value]}
         }
         let books = socket.request.session.recommendedBooks ?? []
-        let booksOfGenre = books.filter((n) => n.genres.includes(topGenre))
+        let booksOfGenre = books.filter((n) => n.genres.includes(topGenreData.genre))
         for (let i = booksOfGenre.length -1; i > 0; i--) {      //Fisher Yates Method
           let j = Math.floor(Math.random() * (i+1));
           let k = booksOfGenre[i];
           booksOfGenre[i] = booksOfGenre[j];
           booksOfGenre[j] = k;
         }
-        io.emit("server-recommendation-yes",{data: booksOfGenre[0]})
+        io.emit("server-recommendation-yes", {data: {...booksOfGenre[0], topGenre: topGenreData.genre} })
       }
       io.emit("server-recommendation-no")
     });
 
   socket.on("client-request-history", () => {
-    if(socket.request.session.history != []){
+    if(socket.request.session.history){
       io.emit("server-history-yes", {data: socket.request.session.history})
     } else {
       io.emit("server-history-no")
