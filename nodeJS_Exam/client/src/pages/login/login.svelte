@@ -3,7 +3,7 @@
   import { user, BASE_URL } from "../../store/global";
   import toast from "svelte-french-toast";
 
-  let username = "test3";
+  let username = "test2";
   let password = "1234"
 
   async function login() {

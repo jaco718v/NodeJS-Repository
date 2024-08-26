@@ -7,6 +7,7 @@ const whiteListArray = ['book_id', 'title', 'author', 'available', 'pages']
 
 
 async function authorizeAdminSession(req, res, next) {
+    req.session.user.role = req.session.user.role ?? ""
     if(req.session.user.role === 'admin'){
         next()
     } else{
@@ -44,6 +45,26 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
     res.send({data:[...sqlData]})
 })
 
+router.get("/api/books/ebooks", async (req,res) => { // page&page_size&sort&order&search
+    let pageSize = Number(req.query.page_size) || 10
+    let page = Number(req.query.page) || 1
+    const Offset = ((pageSize * page) - pageSize) || 0
+    
+    let sortValue = req.query.sort ||'book_id'
+    sortValue = whiteListArray.filter((n) => n === (sortValue).toLowerCase())[0] || 'book_id'
+
+    let orderType = req.query.order?  'DESC' : 'ASC' 
+
+    const search = req.query.search? req.query.search + '%' : '%'
+    
+    const query = `SELECT b.*,
+     (SELECT GROUP_CONCAT(g.genre,', ') from genres g WHERE g.book_id = b.book_id) as genre_list
+      FROM books b WHERE (b.title LIKE ? OR b.author LIKE) AND ebook_link IS NOT NULL ? ORDER BY ${sortValue} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
+    const sqlData = await db.all(query, [search, search]);
+
+    res.send({data:[...sqlData]})
+})
+
 router.get("/api/books/total", async (req,res) => {
     const search = req.query.search? req.query.search+ '%' : '%'
     const query = 'SELECT COUNT(*) as total FROM books WHERE title LIKE ? OR author LIKE ?'
@@ -74,6 +95,7 @@ router.put("/api/books/:id", authorizeAdminSession, async (req, res, next) => {
         const genreResult = await db.run(`INSERT INTO genres (book_id, genre) VALUES (?, ?);`, 
         [req.params.id , genre]);
     }
+    res.send({data: null });
 })
 
 router.delete("/api/books/:id", authorizeAdminSession, async (req, res, next) => {
@@ -81,6 +103,7 @@ router.delete("/api/books/:id", authorizeAdminSession, async (req, res, next) =>
     [req.params.id])
     const deleteGenreResult = await db.run('DELETE FROM genres WHERE book_id = ?;',
     [req.params.id])
+    res.send({data: null });
 })
 
 export default router;

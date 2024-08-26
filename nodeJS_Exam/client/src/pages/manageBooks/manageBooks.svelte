@@ -34,7 +34,7 @@
   let modalBookAuthor;
   let modalBookResume;
   let modalBookPages;
-  let modalBookGenres = [];
+  let modalBookGenres = [""];
   let modalBookGenresConcat;
   $: if (modalBookGenres) modalBookGenresConcat = modalBookGenres.join("-");
 
@@ -74,7 +74,7 @@
     modalBookAuthor = "";
     modalBookResume = "";
     modalBookPages = "";
-    modalBookGenres = [];
+    modalBookGenres = [""];
   }
 
   function handleBookTablePress(itemData, evt) {
@@ -136,10 +136,10 @@
     modalBookGenres = modalBookGenres.filter((n) => n !==  genre);
   }
 
-  async function handleSubmit(event) {
+  async function handleSubmitPost(event) {
     const form = event.target;
     const data = new FormData(form);
-    if (form.method == "post") {
+    console.log(form.method)
       try {
         const response = await fetch(URL, {
           method: "POST",
@@ -150,12 +150,18 @@
         });
         toast.success("Book created");
         fetchBooks()
+        showModal = false
       } catch (error) {
         toast.error("Error while creating book");
-      }
-    } else {
-      try {
-        const response = await fetch(URL + "/" + data.get("book_id"), {
+    }
+  }
+
+  async function handleSubmitPut(event) {
+    const form = event.target;
+    const data = new FormData(form);
+    console.log(Object.fromEntries(data))
+    try{
+    const response = await fetch(URL + "/" + data.get("book_id"), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -164,12 +170,14 @@
         });
         toast.success("Book updated");
         fetchBooks()
+        showModal = false
+        console.log("ey")
       } catch (error) {
+        console.log("eh")
         toast.error("Error while updating book");
       }
-    }
-    showModal = false
   }
+
 
   function onHeaderPress(header) {
     orderValue === "asc" && sortValue == header ? "desc" : "asc";
@@ -208,7 +216,7 @@
       action={URL}
       method={modalType ? "POST" : "PUT"}
       id="submitForm"
-      on:submit|preventDefault={handleSubmit}
+      on:submit|preventDefault={modalType === "POST" ? handleSubmitPost : handleSubmitPut}
     >
       <h2>{modalType ? "Create Book" : "Edit Book"}</h2>
       <input type="hidden" name="book_id" bind:value={modalBookId} />

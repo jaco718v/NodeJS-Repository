@@ -23,6 +23,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS books (
   pages INTEGER,
   author VARCHAR(100),
   available BOOLEAN
+  ebook_link VARCHAR(100)
 );`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS genres (
