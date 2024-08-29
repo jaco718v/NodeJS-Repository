@@ -1,5 +1,7 @@
 <script>
   import { onMount } from "svelte";
+  import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+  import { storage } from "../../components/firebaseSDK/config";
   import toast from "svelte-french-toast";
   import Paginator from "../../components/Paginator/Paginator.svelte";
   import Table from "../../components/Table/Table.svelte";
@@ -34,6 +36,7 @@
   let modalBookAuthor;
   let modalBookResume;
   let modalBookPages;
+  let modalEBook;
   let modalBookGenres = [""];
   let modalBookGenresConcat;
   $: if (modalBookGenres) modalBookGenresConcat = modalBookGenres.join("-");
@@ -74,6 +77,7 @@
     modalBookAuthor = "";
     modalBookResume = "";
     modalBookPages = "";
+    modalEBook = null;
     modalBookGenres = [""];
   }
 
@@ -98,6 +102,7 @@
     modalBookAuthor = data.author;
     modalBookResume = data.resume;
     modalBookPages = data.pages;
+    modalEBook = null
     modalBookGenres = [...data.genre_list.split(", ")];
   }
 
@@ -136,11 +141,26 @@
     modalBookGenres = modalBookGenres.filter((n) => n !==  genre);
   }
 
+  async function saveFileToCloud(name, pdf){
+    const storageRef = ref(
+        storage,
+        `ebook-${name}.pdf`
+      );
+      let link = uploadBytes(storageRef, pdf).then(async (snapshot) => {
+        let value = await getDownloadURL(snapshot.ref)
+        return value
+      })
+      return link
+  }
+
   async function handleSubmitPost(event) {
     const form = event.target;
     const data = new FormData(form);
-    console.log(form.method)
       try {
+        if(data.get("ebook_link")["name"]){
+          const link = await saveFileToCloud(data.get("title"), data.get("ebook_link"))
+          data.append("ebook_link", String(link))
+        }
         const response = await fetch(URL, {
           method: "POST",
           headers: {
@@ -159,31 +179,33 @@
   async function handleSubmitPut(event) {
     const form = event.target;
     const data = new FormData(form);
-    console.log(Object.fromEntries(data))
     try{
-    const response = await fetch(URL + "/" + data.get("book_id"), {
+      if(data.get("ebook_link")["name"]){
+          const link = await saveFileToCloud(data.get("title"), data.get("ebook_link"))
+          console.log(link)
+          data.append("ebook_link", String(link))
+        }
+      const response = await fetch(URL + "/" + data.get("book_id"), {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(Object.fromEntries(data)),
+          body: JSON.stringify(Object.fromEntries(data))
         });
         toast.success("Book updated");
         fetchBooks()
         showModal = false
-        console.log("ey")
       } catch (error) {
-        console.log("eh")
         toast.error("Error while updating book");
       }
   }
-
 
   function onHeaderPress(header) {
     orderValue === "asc" && sortValue == header ? "desc" : "asc";
     sortValue = header;
     fetchBooks();
   }
+
 </script>
 
 <div class="barDiv">
@@ -216,7 +238,7 @@
       action={URL}
       method={modalType ? "POST" : "PUT"}
       id="submitForm"
-      on:submit|preventDefault={modalType === "POST" ? handleSubmitPost : handleSubmitPut}
+      on:submit|preventDefault={modalType ? handleSubmitPost : handleSubmitPut}
     >
       <h2>{modalType ? "Create Book" : "Edit Book"}</h2>
       <input type="hidden" name="book_id" bind:value={modalBookId} />
@@ -277,6 +299,20 @@
                       />
                     </div>
                     <div>
+                      <div class="row">
+                        <div class="col-sm-1">
+                          <label for="ebook_link">Upload eBook:</label>
+                        </div>
+                        <div class="col-sm-8">
+                          <input
+                            type="file"
+                            id="ebook_link"
+                            name="ebook_link"
+                            accept="application/pdf"
+                            bind:value={modalEBook}
+                          />
+                        </div>
+                        <div>
                       <br />
                       <div class="row">
                         <div class="col-sm-1">

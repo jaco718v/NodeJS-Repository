@@ -21,6 +21,8 @@
   import ManageBooks from "./pages/manageBooks/manageBooks.svelte";
   import Home from "./pages/home/home.svelte"
   import { Toaster } from "svelte-french-toast";
+  import EbookPage from "./pages/ebookPage/ebookPage.svelte";
+  import ReadPage from "./pages/readPage/readPage.svelte";
 
   let isOpen = false;
 
@@ -45,9 +47,15 @@
     <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
       <Nav class="ms-auto" navbar>
         <NavItem>
+          <Link class="nav-link" to="/reader">Test</Link>
+        </NavItem>
+        <NavItem>
           <Link class="nav-link" to="/books">Books</Link>
         </NavItem>
         {#if $user && $user.role === 'user'}
+        <NavItem>
+          <Link class="nav-link" to="/eBooks">eBooks</Link>
+        </NavItem>
         <Dropdown>
           <DropdownToggle nav caret>User</DropdownToggle>
           <DropdownMenu end>
@@ -89,7 +97,10 @@
     <Route path="/login"><Login /></Route>
     <Route path="/signup"><Signup /></Route>
     <Route path="/books"><BookPage /></Route>
-    <PrivateRoute path="/editBooks"><ManageBooks /></PrivateRoute>
+    <Route path="/reader"><ReadPage /></Route>
+    <PrivateRoute path="/eBooks" let:location><EbookPage /></PrivateRoute>
+    <!-- <PrivateRoute path="/reader" let:location><ReadPage /></PrivateRoute> -->
+    <PrivateRoute path="/editBooks" let:location><ManageBooks /></PrivateRoute>
     <PrivateRoute path="/userOrders" let:location><UserOrders /></PrivateRoute>
     <PrivateRoute path="/editBooks" let:location><ManageBooks /></PrivateRoute>
   </div>

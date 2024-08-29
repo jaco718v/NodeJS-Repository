@@ -41,8 +41,15 @@ router.get("/api/books", async (req,res) => { // page&page_size&sort&order&searc
             req.session.recommendedBooks = req.session.recommendedBooks ? [...req.session.recommendedBooks, ...bookList] : [...bookList]
         }
     }
+    const filteredData = [...sqlData].map((n) => ({...n, ebook_link:null}))
+    res.send({data:filteredData})
+})
 
-    res.send({data:[...sqlData]})
+router.get("/api/books/total", async (req,res) => {
+    const search = req.query.search? req.query.search+ '%' : '%'
+    const query = 'SELECT COUNT(*) as total FROM books WHERE title LIKE ? OR author LIKE ?;'
+    const sqlData = await db.get(query, [search, search]);
+    res.send({data:sqlData.total})
 })
 
 router.get("/api/books/ebooks", async (req,res) => { // page&page_size&sort&order&search
@@ -59,22 +66,23 @@ router.get("/api/books/ebooks", async (req,res) => { // page&page_size&sort&orde
     
     const query = `SELECT b.*,
      (SELECT GROUP_CONCAT(g.genre,', ') from genres g WHERE g.book_id = b.book_id) as genre_list
-      FROM books b WHERE (b.title LIKE ? OR b.author LIKE) AND ebook_link IS NOT NULL ? ORDER BY ${sortValue} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
+      FROM books b WHERE (b.title LIKE ? OR b.author LIKE ?) AND b.ebook_link IS NOT NULL ORDER BY ${sortValue} ${orderType} LIMIT ${pageSize} OFFSET ${Offset};`;
     const sqlData = await db.all(query, [search, search]);
 
     res.send({data:[...sqlData]})
 })
 
-router.get("/api/books/total", async (req,res) => {
+router.get("/api/books/ebooks/total", async (req,res) => {
     const search = req.query.search? req.query.search+ '%' : '%'
-    const query = 'SELECT COUNT(*) as total FROM books WHERE title LIKE ? OR author LIKE ?'
+    const query = 'SELECT COUNT(*) as total FROM books WHERE (title LIKE ? OR author LIKE ?) AND ebook_link IS NOT NULL;'
     const sqlData = await db.get(query, [search, search]);
     res.send({data:sqlData.total})
 })
 
+
 router.post("/api/books", authorizeAdminSession , async (req, res, next) => {
-    const bookResult = await db.run(`INSERT INTO books (title, resume, author, pages, available) VALUES (?, ?, ?, ?, 1);`, 
-                                [req.body.title, req.body.resume, req.body.author, req.body.pages]);
+    const bookResult = await db.run(`INSERT INTO books (title, resume, author, pages, available, ebook_link) VALUES (?, ?, ?, ?, 1, ?);`, 
+                                [req.body.title, req.body.resume, req.body.author, req.body.pages, req.body.ebook_link]);
     const concatGenres = (req.body.genres).split('-')
     
     for (let genre of concatGenres){
@@ -82,12 +90,12 @@ router.post("/api/books", authorizeAdminSession , async (req, res, next) => {
         [bookResult.lastID , genre]);
     }
 
-    res.send({data: null });
+    res.send({data: bookResult.lastID});
 })
 
 router.put("/api/books/:id", authorizeAdminSession, async (req, res, next) => {
-    const editResult = await db.run('UPDATE books SET title = ?, resume = ?, author = ?, pages = ? WHERE book_id = ?;', 
-    [req.body.title, req.body.resume, req.body.author, req.body.pages, req.params.id])
+    const editResult = await db.run('UPDATE books SET title = ?, resume = ?, author = ?, pages = ?, ebook_link = ? WHERE book_id = ?;', 
+    [req.body.title, req.body.resume, req.body.author, req.body.pages, req.body.ebook_link, req.params.id])
     const deleteResult = await db.run('DELETE FROM genres WHERE book_id = ?;',
     [req.params.id])
     const concatGenres = (req.body.genres).split('-')

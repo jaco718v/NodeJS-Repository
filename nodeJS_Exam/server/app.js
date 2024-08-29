@@ -7,12 +7,12 @@ import bookRouter from "./routers/bookRouter.js"
 import orderRouter from "./routers/orderRouter.js"
 const app = express();
 
-import path from "path";
-app.use(express.static(path.resolve("../client/dist")));    
-
 app.use(express.json());
 
-app.use(helmet());
+app.use(helmet.permittedCrossDomainPolicies());
+
+import path from "path";
+app.use(express.static(path.resolve("../client/dist")));    
 
 app.set("trust proxy", 1); // trust first proxy
 

@@ -22,8 +22,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS books (
   resume TEXT,
   pages INTEGER,
   author VARCHAR(100),
-  available BOOLEAN
-  ebook_link VARCHAR(100)
+  available BOOLEAN,
+  ebook_link VARCHAR(200) DEFAULT FALSE
 );`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS genres (
