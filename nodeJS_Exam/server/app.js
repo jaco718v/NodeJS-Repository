@@ -6,6 +6,7 @@ import authRouter from "./routers/authRouter.js";
 import bookRouter from "./routers/bookRouter.js"
 import orderRouter from "./routers/orderRouter.js"
 import favoritesRouter from "./routers/favoritesRouter.js"
+import locationsRouter from "./routers/locationRouter.js"
 
 const app = express();
 
@@ -59,6 +60,8 @@ app.use(bookRouter)
 app.use(orderRouter)
 
 app.use(favoritesRouter)
+
+app.use(locationsRouter)
 
 import http from "http";
 const server = http.createServer(app);

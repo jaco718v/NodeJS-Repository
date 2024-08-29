@@ -17,6 +17,7 @@
   "dependencies": {
     "@sveltestrap/sveltestrap": "^6.2.2",
     "firebase": "^10.13.0",
+    "leaflet": "^1.9.4",
     "socket.io-client": "^4.7.4",
     "svelte-french-toast": "^1.2.0",
     "svelte-navigator": "^3.2.2"

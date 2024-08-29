@@ -39,6 +39,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS orders (
   created VARCHAR(50),
   FOREIGN KEY(username) REFERENCES users(username)
 );`);
+//Add location foreign key and value
 
 db.exec(`CREATE TABLE IF NOT EXISTS order_books (
   order_id INTEGER,
@@ -52,6 +53,14 @@ db.exec(`CREATE TABLE IF NOT EXISTS favorites (
     book_id INTEGER,
     FOREIGN KEY(username) REFERENCES users(username),
     FOREIGN KEY(book_id) REFERENCES books(book_id)
+  );`)
+
+db.exec(`CREATE TABLE IF NOT EXISTS locations (
+    location_name VARCHAR(255),
+    postal_code VARCHAR(4),
+    address VARCHAR(255),
+    x_coordinate REAL,
+    y_coordinate REAL,
   );`)
 
 //SEED //Nacho123

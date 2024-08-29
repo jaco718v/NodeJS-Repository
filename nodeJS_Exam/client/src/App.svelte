@@ -24,6 +24,7 @@
   import EbookPage from "./pages/ebookPage/ebookPage.svelte";
   import ReadPage from "./pages/readPage/readPage.svelte";
   import FavoritesPage from "./pages/favoritesPage/favoritesPage.svelte";
+  import MapPage from "./pages/mapPage/mapPage.svelte";
 
   let isOpen = false;
 
@@ -48,7 +49,7 @@
     <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
       <Nav class="ms-auto" navbar>
         <NavItem>
-          <Link class="nav-link" to="/reader">Test</Link>
+          <Link class="nav-link" to="/map">Test</Link>
         </NavItem>
         <NavItem>
           <Link class="nav-link" to="/books">Books</Link>
@@ -103,6 +104,7 @@
     <Route path="/login"><Login /></Route>
     <Route path="/signup"><Signup /></Route>
     <Route path="/books"><BookPage /></Route>
+    <Route path="/map"><MapPage/></Route>
     <PrivateRoute path="/eBooks" let:location><EbookPage /></PrivateRoute>
     <PrivateRoute path="/favorites" let:location><FavoritesPage /></PrivateRoute>
     <PrivateRoute path="/reader" let:location><ReadPage /></PrivateRoute>
