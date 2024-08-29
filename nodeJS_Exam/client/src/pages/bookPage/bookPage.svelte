@@ -143,7 +143,7 @@
   }
 
   function onHeaderPress(header) {
-    orderValue === "asc" && sortValue == header ? "desc" : "asc";
+    !orderValue && sortValue == header ? true : false;
     sortValue = header;
     fetchBooks();
   }

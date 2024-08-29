@@ -5,6 +5,8 @@ import helmet from "helmet";
 import authRouter from "./routers/authRouter.js";
 import bookRouter from "./routers/bookRouter.js"
 import orderRouter from "./routers/orderRouter.js"
+import favoritesRouter from "./routers/favoritesRouter.js"
+
 const app = express();
 
 app.use(express.json());
@@ -55,6 +57,8 @@ app.use(authRouter);
 app.use(bookRouter)
 
 app.use(orderRouter)
+
+app.use(favoritesRouter)
 
 import http from "http";
 const server = http.createServer(app);

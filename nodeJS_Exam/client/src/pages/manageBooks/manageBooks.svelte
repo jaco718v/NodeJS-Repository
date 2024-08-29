@@ -24,7 +24,7 @@
   let modalType;
   let showModal = false;
 
-  let orderValue = "asc";
+  let orderValue = "false";
   let sortValue = "";
   let searchTerm = "";
   let currentPage = 1;
@@ -201,7 +201,7 @@
   }
 
   function onHeaderPress(header) {
-    orderValue === "asc" && sortValue == header ? "desc" : "asc";
+    !orderValue && sortValue == header ? true : false;
     sortValue = header;
     fetchBooks();
   }

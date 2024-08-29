@@ -45,8 +45,14 @@ db.exec(`CREATE TABLE IF NOT EXISTS order_books (
   book_id INTEGER,
   FOREIGN KEY(order_id) REFERENCES orders(order_id),
   FOREIGN KEY(book_id) REFERENCES books(book_id)
-) `)
+); `)
 
+db.exec(`CREATE TABLE IF NOT EXISTS favorites (
+    username VARCHAR(255),
+    book_id INTEGER,
+    FOREIGN KEY(username) REFERENCES users(username),
+    FOREIGN KEY(book_id) REFERENCES books(book_id)
+  );`)
 
 //SEED //Nacho123
 if(isDeleteMode){
