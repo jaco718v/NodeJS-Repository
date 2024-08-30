@@ -2,7 +2,7 @@
   import Table from "../../components/Table/Table.svelte";
   import OrderBook from "../../components/OrderBook/OrderBook.svelte";
   export let orderData;
-  const orderBookHeaders = ["ID", "Id", "Title"];
+  const orderBookHeaders = ["ID", "Title", "Author"];
 </script>
 
 <div>

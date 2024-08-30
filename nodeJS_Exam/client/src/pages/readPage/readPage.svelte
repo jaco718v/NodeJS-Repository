@@ -5,7 +5,7 @@
 <div>
   <iframe
     src={$ebookLink}
-    style="width: 1600px; height: 93vh;"
+    style="width: 1200px; height: 93vh;"
     frameborder="1"
     title="pdf-reader"
   ></iframe>

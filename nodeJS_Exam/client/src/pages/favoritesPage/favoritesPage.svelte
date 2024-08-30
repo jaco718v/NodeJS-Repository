@@ -10,7 +10,7 @@
   const URL = $BASE_URL + "/api/favorites";
 
   let bookData = [];
-  const bookHeaders = ["Title", "Author", "Genres", "Pages", "Actions"];
+  const bookHeaders = ["Title", "Author", "Genres", "Pages","Available", "Actions"];
 
   let showModal = false;
   let modalBook = {};
@@ -76,7 +76,7 @@
     >
       <button id="btn-open">Read</button>
       <button id="btn-modal">Details</button>
-      <button id="btn-favorite">Star-Icon</button>
+      <button id="btn-favorite">Unfavorite</button>
     </Table>
   </div>
 </div>

@@ -33,6 +33,7 @@
           )
           .openPopup();
       }
+      map.setView(initialView, 10);
     } catch {
       toast.error("Error getting books");
     }
@@ -93,7 +94,7 @@
 
   function placeTestMarker() {
     let newMarker = [xCoordinate, yCoordinate];
-    map.setView(newMarker, 5);
+    map.setView(newMarker, 10);
     L.marker(newMarker)
       .addTo(map)
       .bindPopup("<b>Your marker will be placed here!<b/>")
@@ -161,7 +162,7 @@
         bind:value={yCoordinate}
       />
     </div>
-    <button style="width:193px;" on:click={finishCreate}
+    <button style="width:193px;" on:click={placeTestMarker}
       >Place Test-marker</button
     >
     <button style="width:193px;" form="submitForm">Create</button>
