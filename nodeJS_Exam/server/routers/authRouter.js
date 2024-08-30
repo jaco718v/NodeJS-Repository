@@ -10,16 +10,21 @@ const router = Router();
 async function authorize(req, res, next) {
   const query = "SELECT hashed_password, role FROM users WHERE username = ?;";
   const sqlData = await db.get(query, [req.body.username]);
-  if (sqlData && await bcrypt.compare(req.body.password, sqlData.hashed_password || "")) {
-    req.session.user = {name: req.body.username, role:sqlData.role }
+  if (
+    sqlData &&
+    (await bcrypt.compare(req.body.password, sqlData.hashed_password || ""))
+  ) {
+    req.session.user = { name: req.body.username, role: sqlData.role };
     next();
   } else {
-    res.status(401).send("Incorrect email or password")
+    res.status(401).send("Incorrect email or password");
   }
 }
 
 router.post("/api/login", authorize, (req, res, next) => {
-  res.send({ data: { name: req.session.user.name, role: req.session.user.role } });
+  res.send({
+    data: { name: req.session.user.name, role: req.session.user.role },
+  });
 });
 
 async function signup(req, res, next) {
@@ -27,7 +32,8 @@ async function signup(req, res, next) {
   const foundValue = await db.get(query, [req.body.username]);
   if (!foundValue) {
     const hashed_password = await bcrypt.hash(req.body.password, saltRounds);
-    const query = "INSERT INTO users (username, hashed_password, role) VALUES(?, ?, 'user')";
+    const query =
+      "INSERT INTO users (username, hashed_password, role) VALUES(?, ?, 'user')";
     await db.run(query, [req.body.username, hashed_password]);
     await sendMailTest();
     next();
@@ -37,8 +43,10 @@ async function signup(req, res, next) {
 }
 
 router.post("/api/signup", signup, (req, res) => {
-  req.session.user = {name: req.body.username, role:'user'}
-  res.send({ data: { user: req.session.user.name, role: req.session.user.role } });
+  req.session.user = { name: req.body.username, role: "user" };
+  res.send({
+    data: { user: req.session.user.name, role: req.session.user.role },
+  });
 });
 
 function authenticate(req, res, next) {

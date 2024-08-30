@@ -18,13 +18,15 @@
   import Signup from "./pages/signup/signup.svelte";
   import PrivateRoute from "./components/PrivateRoute/PrivateRoute.svelte";
   import BookPage from "./pages/bookPage/bookPage.svelte";
-  import ManageBooks from "./pages/manageBooks/manageBooks.svelte"
-  import Home from "./pages/home/home.svelte"
+  import ManageBooks from "./pages/manageBooks/manageBooks.svelte";
+  import Home from "./pages/home/home.svelte";
   import { Toaster } from "svelte-french-toast";
   import EbookPage from "./pages/ebookPage/ebookPage.svelte";
   import ReadPage from "./pages/readPage/readPage.svelte";
   import FavoritesPage from "./pages/favoritesPage/favoritesPage.svelte";
   import MapPage from "./pages/mapPage/mapPage.svelte";
+  import CreateLocations from "./pages/createLocations/createLocations.svelte";
+  import OrdersOverview from "./pages/ordersOverview/ordersOverview.svelte";
 
   let isOpen = false;
 
@@ -43,70 +45,95 @@
 <Toaster />
 
 <Router>
-  <Navbar  color="light" light expand="lg">
-    <NavbarBrand class=disable><Link to="/">Mailorder-Library</Link></NavbarBrand>
+  <Navbar color="light" light expand="lg">
+    <NavbarBrand class="disable"
+      ><Link to="/">Mailorder-Library</Link></NavbarBrand
+    >
     <NavbarToggler on:click={() => (isOpen = !isOpen)} />
     <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
       <Nav class="ms-auto" navbar>
         <NavItem>
-          <Link class="nav-link" to="/map">Test</Link>
+          <Link class="nav-link" to="/map">Pickups</Link>
         </NavItem>
         <NavItem>
           <Link class="nav-link" to="/books">Books</Link>
         </NavItem>
-        {#if $user && $user.role === 'user'}
-        <Dropdown>
-          <DropdownToggle nav caret>eBooks</DropdownToggle>
-          <DropdownMenu end>
-            <DropdownItem><Link class="nav-link" to="/eBooks">All eEbooks</Link></DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem><Link to="/favorites">Favorites</Link></DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Dropdown>
-          <DropdownToggle nav caret>User</DropdownToggle>
-          <DropdownMenu end>
-            <DropdownItem><Link to="/userOrders">Recent Orders</Link></DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem><Link to="/">Account</Link></DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        {#if $user && $user.role === "user"}
+          <Dropdown>
+            <DropdownToggle nav caret>eBooks</DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem
+                ><Link class="nav-link" to="/eBooks">All eEbooks</Link
+                ></DropdownItem
+              >
+              <DropdownItem divider />
+              <DropdownItem><Link to="/favorites">Favorites</Link></DropdownItem
+              >
+            </DropdownMenu>
+          </Dropdown>
+          <Dropdown>
+            <DropdownToggle nav caret>User</DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem
+                ><Link to="/userOrders">Recent Orders</Link></DropdownItem
+              >
+              <DropdownItem divider />
+              <DropdownItem><Link to="/">Account</Link></DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         {/if}
-        {#if $user && $user.role === 'admin'}
-        <Dropdown>
-          <DropdownToggle nav caret>Admin</DropdownToggle>
-          <DropdownMenu end>
-            <DropdownItem><Link to="/editBooks">Edit Books</Link></DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem>Orders</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
+        {#if $user && $user.role === "admin"}
+          <Dropdown>
+            <DropdownToggle nav caret>Admin</DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem
+                ><Link to="/editBooks">Edit Books</Link></DropdownItem
+              >
+              <DropdownItem divider />
+              <DropdownItem><Link to="/adminOrders">Orders</Link></DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem
+                ><Link class="nav-link" to="/createLocation"
+                  >Create Locations</Link
+                ></DropdownItem
+              >
+            </DropdownMenu>
+          </Dropdown>
         {/if}
         {#if !$user}
-        <NavItem>
-          <Link class="nav-link" to="/signup">Signup</Link>
-        </NavItem>
-        <NavItem>
-          <Link class="nav-link" to="/login">Login</Link>
-        </NavItem>
-      {/if}
-      {#if $user}
-      <NavItem>
-        <button class="nav-link" on:click={signOut}>Logout</button>
-      </NavItem>
-    {/if}
+          <NavItem>
+            <Link class="nav-link" to="/signup">Signup</Link>
+          </NavItem>
+          <NavItem>
+            <Link class="nav-link" to="/login">Login</Link>
+          </NavItem>
+        {/if}
+        {#if $user}
+          <NavItem>
+            <div class="nav-link" style="cursor: pointer;" on:click={signOut}>
+              Logout
+            </div>
+          </NavItem>
+        {/if}
       </Nav>
     </Collapse>
   </Navbar>
 
   <div>
-    <PrivateRoute path="/" let:location><Home/></PrivateRoute>
+    <PrivateRoute path="/" let:location><Home /></PrivateRoute>
     <Route path="/login"><Login /></Route>
     <Route path="/signup"><Signup /></Route>
     <Route path="/books"><BookPage /></Route>
-    <Route path="/map"><MapPage/></Route>
+    <Route path="/map"><MapPage /></Route>
+    <PrivateRoute path="/adminOrders" let:location
+      ><OrdersOverview /></PrivateRoute
+    >
+    <PrivateRoute path="/createLocation" let:location
+      ><CreateLocations /></PrivateRoute
+    >
     <PrivateRoute path="/eBooks" let:location><EbookPage /></PrivateRoute>
-    <PrivateRoute path="/favorites" let:location><FavoritesPage /></PrivateRoute>
+    <PrivateRoute path="/favorites" let:location><FavoritesPage /></PrivateRoute
+    >
     <PrivateRoute path="/reader" let:location><ReadPage /></PrivateRoute>
     <PrivateRoute path="/editBooks" let:location><ManageBooks /></PrivateRoute>
     <PrivateRoute path="/userOrders" let:location><UserOrders /></PrivateRoute>

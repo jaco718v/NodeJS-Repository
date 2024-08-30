@@ -5,7 +5,7 @@
   import toast from "svelte-french-toast";
 
   let orderData = [];
-  const URL = $BASE_URL + "/api/orders";
+  const URL = $BASE_URL + "/api/orders/admin";
 
   onMount(async () => {
     fetchOrders();
@@ -22,7 +22,7 @@
   }
 </script>
 
-<h1>Your Most Recent Orders</h1>
+<h1>Most Recent Customer Orders</h1>
 <div class="container">
   <div class="grid-container">
     {#each orderData as order}

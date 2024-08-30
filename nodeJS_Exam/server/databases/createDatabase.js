@@ -23,7 +23,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS books (
   pages INTEGER,
   author VARCHAR(100),
   available BOOLEAN,
-  ebook_link VARCHAR(200) DEFAULT FALSE
+  ebook_link VARCHAR(200)
 );`);
 
 db.exec(`CREATE TABLE IF NOT EXISTS genres (
@@ -60,7 +60,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS locations (
     postal_code VARCHAR(4),
     address VARCHAR(255),
     x_coordinate REAL,
-    y_coordinate REAL,
+    y_coordinate REAL
   );`)
 
 //SEED //Nacho123

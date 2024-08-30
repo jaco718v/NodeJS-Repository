@@ -1,13 +1,15 @@
 <script>
-    import { ebookLink } from "../../store/linkStore";
-
+  import { ebookLink } from "../../store/linkStore";
 </script>
 
 <div>
-
-    <iframe src="{$ebookLink}" frameborder="1" title="pdf-reader"></iframe>
+  <iframe
+    src={$ebookLink}
+    style="width: 1600px; height: 93vh;"
+    frameborder="1"
+    title="pdf-reader"
+  ></iframe>
 </div>
 
 <style>
-    
 </style>

@@ -102,7 +102,7 @@
     modalBookAuthor = data.author;
     modalBookResume = data.resume;
     modalBookPages = data.pages;
-    modalEBook = null
+    modalEBook = null;
     modalBookGenres = [...data.genre_list.split(", ")];
   }
 
@@ -112,9 +112,9 @@
         method: "DELETE",
       });
       toast.success("Book deleted");
-      fetchBooks()
+      fetchBooks();
     } catch (err) {
-      toast.error("Error while deleting book")
+      toast.error("Error while deleting book");
     }
   }
 
@@ -138,66 +138,68 @@
   }
 
   function removeGenre(genre) {
-    modalBookGenres = modalBookGenres.filter((n) => n !==  genre);
+    modalBookGenres = modalBookGenres.filter((n) => n !== genre);
   }
 
-  async function saveFileToCloud(name, pdf){
-    const storageRef = ref(
-        storage,
-        `ebook-${name}.pdf`
-      );
-      let link = uploadBytes(storageRef, pdf).then(async (snapshot) => {
-        let value = await getDownloadURL(snapshot.ref)
-        return value
-      })
-      return link
+  async function saveFileToCloud(name, pdf) {
+    const storageRef = ref(storage, `ebook-${name}.pdf`);
+    let link = uploadBytes(storageRef, pdf).then(async (snapshot) => {
+      let value = await getDownloadURL(snapshot.ref);
+      return value;
+    });
+    return link;
   }
 
   async function handleSubmitPost(event) {
     const form = event.target;
     const data = new FormData(form);
-      try {
-        if(data.get("ebook_link")["name"]){
-          const link = await saveFileToCloud(data.get("title"), data.get("ebook_link"))
-          data.append("ebook_link", String(link))
-        }
-        const response = await fetch(URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(Object.fromEntries(data)),
-        });
-        toast.success("Book created");
-        fetchBooks()
-        showModal = false
-      } catch (error) {
-        toast.error("Error while creating book");
+    try {
+      if (data.get("ebook_link")["name"]) {
+        const link = await saveFileToCloud(
+          data.get("title"),
+          data.get("ebook_link")
+        );
+        data.append("ebook_link", String(link));
+      }
+      const response = await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(data)),
+      });
+      toast.success("Book created");
+      fetchBooks();
+      showModal = false;
+    } catch (error) {
+      toast.error("Error while creating book");
     }
   }
 
   async function handleSubmitPut(event) {
     const form = event.target;
     const data = new FormData(form);
-    try{
-      if(data.get("ebook_link")["name"]){
-          const link = await saveFileToCloud(data.get("title"), data.get("ebook_link"))
-          console.log(link)
-          data.append("ebook_link", String(link))
-        }
-      const response = await fetch(URL + "/" + data.get("book_id"), {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(Object.fromEntries(data))
-        });
-        toast.success("Book updated");
-        fetchBooks()
-        showModal = false
-      } catch (error) {
-        toast.error("Error while updating book");
+    try {
+      if (data.get("ebook_link")["name"]) {
+        const link = await saveFileToCloud(
+          data.get("title"),
+          data.get("ebook_link")
+        );
+        data.append("ebook_link", String(link));
       }
+      const response = await fetch(URL + "/" + data.get("book_id"), {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(Object.fromEntries(data)),
+      });
+      toast.success("Book updated");
+      fetchBooks();
+      showModal = false;
+    } catch (error) {
+      toast.error("Error while updating book");
+    }
   }
 
   function onHeaderPress(header) {
@@ -205,7 +207,6 @@
     sortValue = header;
     fetchBooks();
   }
-
 </script>
 
 <div class="barDiv">
@@ -313,36 +314,38 @@
                           />
                         </div>
                         <div>
-                      <br />
-                      <div class="row">
-                        <div class="col-sm-1">
-                          <label for="genre">Genres</label>
+                          <br />
+                          <div class="row">
+                            <div class="col-sm-1">
+                              <label for="genre">Genres</label>
+                            </div>
+                            <div class="col-sm-8">
+                              <button on:click={addGenre}>Add genre</button>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-1"></div>
+                            <div class="col-sm-8">
+                              {#each modalBookGenres as genre, index}
+                                <input
+                                  type="text"
+                                  class="genre-input"
+                                  bind:value={modalBookGenres[index]}
+                                  required
+                                /><button on:click={() => removeGenre(genre)}
+                                  >X</button
+                                >
+                              {/each}
+                            </div>
+                            {#key modalBookGenres}
+                              <input
+                                type="hidden"
+                                name="genres"
+                                bind:value={modalBookGenresConcat}
+                              />
+                            {/key}
+                          </div>
                         </div>
-                        <div class="col-sm-8">
-                          <button on:click={addGenre}>Add genre</button>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-sm-1"></div>
-                        <div class="col-sm-8">
-                          {#each modalBookGenres as genre, index}
-                            <input
-                              type="text"
-                              class="genre-input"
-                              bind:value={modalBookGenres[index]}
-                              required
-                            /><button on:click={() => removeGenre(genre)}
-                              >X</button
-                            >
-                          {/each}
-                        </div>
-                        {#key modalBookGenres}
-                          <input
-                            type="hidden"
-                            name="genres"
-                            bind:value={modalBookGenresConcat}
-                          />
-                        {/key}
                       </div>
                     </div>
                   </div>
@@ -355,9 +358,7 @@
     </form>
   </div>
   <div slot="buttons">
-    <button form="submitForm"
-      >{modalType ? "Create" : "Finish edit"}</button
-    >
+    <button form="submitForm">{modalType ? "Create" : "Finish edit"}</button>
   </div>
 </Modal>
 

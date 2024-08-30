@@ -105,6 +105,7 @@
   }
 
   function handleSuggestionClick(item) {
+    searchTerm = "";
     bookData = [item];
     numberOfPages = 1;
   }
@@ -199,45 +200,45 @@
 
 <Modal bind:showModal>
   <div slot="content">
-    <div class="row">
+    <div class="row myBorder">
       <div class="col-sm-1"></div>
       <div class="col-sm-8">
         <h2>{modalBook.title}</h2>
       </div>
-      <div>
-        <div class="row">
-          <div class="col-sm-1"></div>
-          <div class="col-sm-8">
-            <h4>{modalBook.author}</h4>
-          </div>
-          <div>
-            <div class="row">
-              <div class="col-sm-1"></div>
-              <div class="col-sm-8">
-                <div>{modalBook.resume}</div>
-              </div>
-              <div>
-                <div class="row">
-                  <div class="col-sm-1">
-                    <span>Pages:</span>
-                  </div>
-                  <div class="col-sm-1">
-                    <span>{modalBook.pages}</span>
-                  </div>
-                  <div class="col-sm-4"></div>
-                  <div class="col-sm-1">Status:</div>
-                  <div class="col-sm-1">
-                    {modalBook.available ? "Available" : "Rented"}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="row myBorder">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-8">
+        <h4>{modalBook.author}</h4>
+      </div>
+    </div>
+    <div class="row myBorder">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-8">
+        <div>{modalBook.resume}</div>
+      </div>
+      <br />
+      <br />
+      <br />
+    </div>
+    <br />
+    <br />
+    <br />
+    <div class="row">
+      <div class="col-sm-1">
+        <span>Pages:</span>
+      </div>
+      <div class="col-sm-1">
+        <span>{modalBook.pages}</span>
+      </div>
+      <div class="col-sm-1"></div>
+      <div class="col-sm-1">Status:</div>
+      <div class="col-sm-1">
+        {modalBook.available ? "Available" : "Rented"}
       </div>
     </div>
   </div>
-  <div slot=buttons></div>
+  <div slot="buttons"></div>
 </Modal>
 
 <style>
@@ -257,5 +258,8 @@
   }
   .pagDiv {
     align-items: center;
+  }
+  .myBorder {
+    border-bottom: 1px solid black;
   }
 </style>

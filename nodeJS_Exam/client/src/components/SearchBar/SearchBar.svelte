@@ -22,7 +22,7 @@
 
 <div class="sbar">
   <input
-    on:focus={() => visibleSuggestions=true} on:focusout={() => visibleSuggestions=false}
+    on:focus={() => visibleSuggestions=true} 
     bind:value={searchTerm}
     placeholder="Search..."
     on:keyup={fetchSuggestions}
