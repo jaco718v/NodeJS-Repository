@@ -26,6 +26,7 @@
           )
           .openPopup();
       }
+      map.setView(initialView, 10);
     } catch {
       toast.error("Error getting books");
     }
